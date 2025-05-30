@@ -101,6 +101,7 @@ body {
 /* Main Content */
 .main-content {
     padding: 0 20px;
+    min-height: calc(100vh - 200px);
 }
 
 /* Section Headers */
@@ -997,10 +998,24 @@ body {
 /* Profile Section */
 .profile-section {
     padding: 0;
+    display: none; /* Default hidden */
 }
 
 .profile-section.hidden {
-    display: none;
+    display: none !important;
+}
+
+.profile-section:not(.hidden) {
+    display: block !important;
+}
+
+/* Home Content */
+#homeContent {
+    display: block; /* Default visible */
+}
+
+#homeContent.hidden {
+    display: none !important;
 }
 
 .profile-header {

@@ -177,12 +177,54 @@ async function initializeLiff() {
         showMockUser();
     }
     
+    // Ensure home content is shown and profile is hidden on startup
+    initializeUI();
+    
     hideLoading();
     loadPopularMenus();
     loadMenu();
     setupSearch();
     updateFavoritesCount();
     updateDeliveryAddress();
+}
+
+// Initialize UI to show home content
+function initializeUI() {
+    console.log('Initializing UI...');
+    
+    // Show home content, hide profile
+    const homeContent = document.getElementById('homeContent');
+    const profileSection = document.getElementById('profileSection');
+    
+    console.log('Home content element:', homeContent);
+    console.log('Profile section element:', profileSection);
+    
+    if (homeContent) {
+        homeContent.style.display = 'block';
+        console.log('Home content set to visible');
+    } else {
+        console.error('Home content element not found!');
+    }
+    
+    if (profileSection) {
+        profileSection.classList.add('hidden');
+        console.log('Profile section hidden');
+    } else {
+        console.error('Profile section element not found!');
+    }
+    
+    // Set home as active in navigation
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    const homeNavItem = document.querySelector('.nav-item:first-child');
+    if (homeNavItem) {
+        homeNavItem.classList.add('active');
+        console.log('Home nav item activated');
+    } else {
+        console.error('Home nav item not found!');
+    }
+    
+    currentSection = 'home';
+    console.log('UI initialization completed');
 }
 
 // Show mock user for demo
@@ -786,31 +828,49 @@ function hideLoading() {
 
 // Navigation functions
 function navigateToHome() {
+    console.log('Navigating to home...');
     currentSection = 'home';
+    
+    // Update navigation
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    event.target.closest('.nav-item').classList.add('active');
+    const homeNav = document.querySelector('.nav-item:first-child');
+    if (homeNav) homeNav.classList.add('active');
     
     // Show home content, hide profile
-    document.getElementById('homeContent').style.display = 'block';
-    document.getElementById('profileSection').classList.add('hidden');
+    const homeContent = document.getElementById('homeContent');
+    const profileSection = document.getElementById('profileSection');
+    
+    if (homeContent) homeContent.style.display = 'block';
+    if (profileSection) profileSection.classList.add('hidden');
     
     // Reset to all categories
     currentCategory = 'all';
     currentPopularCategory = 'breakfast';
-    document.querySelectorAll('.category-tab-horizontal').forEach(tab => tab.classList.remove('active'));
-    document.querySelector('.category-tab-horizontal').classList.add('active');
+    
+    const tabs = document.querySelectorAll('.category-tab-horizontal');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    if (tabs[0]) tabs[0].classList.add('active');
+    
     loadPopularMenus();
     loadMenu();
+    console.log('Home navigation completed');
 }
 
 function navigateToExplore() {
+    console.log('Navigating to explore...');
     currentSection = 'explore';
+    
+    // Update navigation  
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    event.target.closest('.nav-item').classList.add('active');
+    const exploreNav = document.querySelector('.nav-item:nth-child(2)');
+    if (exploreNav) exploreNav.classList.add('active');
     
     // Show home content, hide profile
-    document.getElementById('homeContent').style.display = 'block';
-    document.getElementById('profileSection').classList.add('hidden');
+    const homeContent = document.getElementById('homeContent');
+    const profileSection = document.getElementById('profileSection');
+    
+    if (homeContent) homeContent.style.display = 'block';
+    if (profileSection) profileSection.classList.add('hidden');
     
     // Show popular items
     const popularItems = menuData.filter(item => item.isPopular);
@@ -819,43 +879,60 @@ function navigateToExplore() {
 }
 
 function navigateToFavorites() {
+    console.log('Navigating to favorites...');
     currentSection = 'favorites';
+    
+    // Update navigation
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    event.target.closest('.nav-item').classList.add('active');
+    const favNav = document.querySelector('.nav-item:nth-child(4)');
+    if (favNav) favNav.classList.add('active');
     
     // Show home content, hide profile
-    document.getElementById('homeContent').style.display = 'block';
-    document.getElementById('profileSection').classList.add('hidden');
+    const homeContent = document.getElementById('homeContent');
+    const profileSection = document.getElementById('profileSection');
+    
+    if (homeContent) homeContent.style.display = 'block';
+    if (profileSection) profileSection.classList.add('hidden');
     
     // Show favorite items
     const favoriteItems = menuData.filter(item => favorites.includes(item.id));
     
     if (favoriteItems.length === 0) {
-        document.getElementById('menuItems').innerHTML = `
-            <div style="
-                text-align: center;
-                padding: 60px 20px;
-                color: #8b8b8b;
-                grid-column: 1 / -1;
-            ">
-                <i class="fas fa-heart" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                <h3 style="margin-bottom: 10px; color: #1a1a1a;">No favorites yet</h3>
-                <p>Add some delicious food to your favorites by clicking the ♥ button</p>
-            </div>
-        `;
+        const menuItems = document.getElementById('menuItems');
+        if (menuItems) {
+            menuItems.innerHTML = `
+                <div style="
+                    text-align: center;
+                    padding: 60px 20px;
+                    color: #8b8b8b;
+                    grid-column: 1 / -1;
+                ">
+                    <i class="fas fa-heart" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                    <h3 style="margin-bottom: 10px; color: #1a1a1a;">No favorites yet</h3>
+                    <p>Add some delicious food to your favorites by clicking the ♥ button</p>
+                </div>
+            `;
+        }
     } else {
         displayMenuItems(favoriteItems);
     }
 }
 
 function navigateToProfile() {
+    console.log('Navigating to profile...');
     currentSection = 'profile';
+    
+    // Update navigation
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    event.target.closest('.nav-item').classList.add('active');
+    const profileNav = document.querySelector('.nav-item:last-child');
+    if (profileNav) profileNav.classList.add('active');
     
     // Hide home content, show profile
-    document.getElementById('homeContent').style.display = 'none';
-    document.getElementById('profileSection').classList.remove('hidden');
+    const homeContent = document.getElementById('homeContent');
+    const profileSection = document.getElementById('profileSection');
+    
+    if (homeContent) homeContent.style.display = 'none';
+    if (profileSection) profileSection.classList.remove('hidden');
     
     updateFavoritesCount();
 }
