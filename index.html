@@ -3,352 +3,527 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบสั่งอาหาร - LINE LIFF</title>
-    <link rel="stylesheet" href="styles.css">
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <title>🍔 Food Delivery - Modern App</title>
+    
+    <!-- Meta tags for better SEO and PWA -->
+    <meta name="description" content="สั่งอาหารออนไลน์ส่งถึงบ้าน อร่อย เร็ว ปลอดภัย">
+    <meta name="keywords" content="food delivery, อาหาร, ส่งอาหาร, food ordering">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- LIFF SDK -->
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading">
+        <div class="spinner-modern">
+            <div class="spinner-circle"></div>
+        </div>
+        <p>🍔 Loading delicious food...</p>
+    </div>
+
+    <!-- App Container -->
     <div id="app">
-        <!-- Header -->
+        <!-- Modern Header -->
         <header class="modern-header">
             <div class="header-greeting">
                 <div class="greeting-text">
-                    <h1>Hai <span id="userName">Nathan</span> 👋</h1>
-                    <p>what do you want eat today?</p>
+                    <h1>Hi <span id="userName">Nathan</span> 👋</h1>
+                    <p>What do you want to eat today?</p>
                 </div>
                 <div class="profile-circle">
                     <img id="userAvatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Profile">
                 </div>
             </div>
             
-            <!-- Search Bar -->
             <div class="search-container">
                 <div class="search-box-modern">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari makanan atau minuman" id="searchInput">
+                    <input type="text" id="searchInput" placeholder="Search for food or drinks..." autocomplete="off">
                 </div>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Profile Section -->
-            <section id="profileSection" class="profile-section hidden">
-                <div class="profile-header">
-                    <div class="profile-info">
-                        <div class="profile-avatar-large">
-                            <img id="profileAvatarLarge" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Profile">
-                        </div>
-                        <div class="profile-details">
-                            <h2 id="profileName">Nathan</h2>
-                            <p id="profilePhone">📱 +66 XX-XXX-XXXX</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-menu">
-                    <!-- Delivery Address -->
-                    <div class="profile-item" onclick="editAddress()">
-                        <div class="profile-item-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="profile-item-content">
-                            <h4>ที่อยู่จัดส่ง</h4>
-                            <p id="deliveryAddress">บ้าน - กรุงเทพมหานคร</p>
-                            <small>คลิกเพื่อแก้ไข</small>
-                        </div>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-
-                    <!-- Order History -->
-                    <div class="profile-item" onclick="showOrderHistory()">
-                        <div class="profile-item-icon">
-                            <i class="fas fa-history"></i>
-                        </div>
-                        <div class="profile-item-content">
-                            <h4>ประวัติการสั่งซื้อ</h4>
-                            <p>ดูออเดอร์ที่ผ่านมา</p>
-                        </div>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-
-                    <!-- Favorites -->
-                    <div class="profile-item" onclick="showProfileFavorites()">
-                        <div class="profile-item-icon">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="profile-item-content">
-                            <h4>รายการโปรด</h4>
-                            <p id="favoritesCount">0 รายการ</p>
-                        </div>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-
-                    <!-- Settings -->
-                    <div class="profile-item" onclick="showSettings()">
-                        <div class="profile-item-icon">
-                            <i class="fas fa-cog"></i>
-                        </div>
-                        <div class="profile-item-content">
-                            <h4>การตั้งค่า</h4>
-                            <p>แจ้งเตือน, ภาษา</p>
-                        </div>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-
-                    <!-- Help -->
-                    <div class="profile-item" onclick="showHelp()">
-                        <div class="profile-item-icon">
-                            <i class="fas fa-question-circle"></i>
-                        </div>
-                        <div class="profile-item-content">
-                            <h4>ช่วยเหลือ</h4>
-                            <p>คำถามที่พบบ่อย, ติดต่อเรา</p>
-                        </div>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-            </section>
-
             <!-- Home Content -->
             <div id="homeContent">
-                <!-- Popular Menus -->
-                <section class="popular-menus">
+                <!-- Popular Menus Section -->
+                <section class="popular-menus" aria-labelledby="popular-heading">
                     <div class="section-header">
-                        <h2>Popular menus</h2>
-                        <button class="see-all-btn">See All</button>
+                        <h2 id="popular-heading">🔥 Popular Menu</h2>
+                        <button class="see-all-btn" onclick="navigateToExplore()" aria-label="See all popular items">
+                            See All <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                     
-                    <!-- Category Tabs -->
-                    <div class="category-tabs-horizontal">
-                        <button class="category-tab-horizontal active" onclick="filterPopular('breakfast')">Breakfast</button>
-                        <button class="category-tab-horizontal" onclick="filterPopular('lunch')">Lunch</button>
-                        <button class="category-tab-horizontal" onclick="filterPopular('dinner')">Dinner</button>
-                        <button class="category-tab-horizontal" onclick="filterPopular('snack')">Snack</button>
-                        <button class="category-tab-horizontal" onclick="filterPopular('drink')">Drink</button>
-                        <button class="category-tab-horizontal" onclick="filterPopular('healthy')">Healthy</button>
+                    <div class="category-tabs-horizontal" role="tablist" aria-label="Food categories">
+                        <button class="category-tab-horizontal active" onclick="filterPopular('breakfast')" role="tab" aria-selected="true">
+                            🥞 Breakfast
+                        </button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('lunch')" role="tab" aria-selected="false">
+                            🍔 Lunch
+                        </button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('dinner')" role="tab" aria-selected="false">
+                            🍝 Dinner
+                        </button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('snack')" role="tab" aria-selected="false">
+                            🍿 Snack
+                        </button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('drink')" role="tab" aria-selected="false">
+                            🥤 Drink
+                        </button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('healthy')" role="tab" aria-selected="false">
+                            🥗 Healthy
+                        </button>
                     </div>
                     
-                    <!-- Popular Menu Cards -->
-                    <div class="popular-menu-grid" id="popularMenuGrid">
-                        <!-- Popular menu items will be loaded here -->
+                    <div id="popularMenuGrid" class="popular-menu-grid animate-fadeIn">
+                        <!-- Popular menu items will be dynamically loaded here -->
                     </div>
                 </section>
 
-                <!-- Categories -->
-                <section class="categories-section">
+                <!-- Categories Section -->
+                <section class="categories-section" aria-labelledby="categories-heading">
                     <div class="section-header">
-                        <h2>Category</h2>
-                        <button class="see-all-btn">See All</button>
+                        <h2 id="categories-heading">🎯 Categories</h2>
                     </div>
                     
                     <div class="category-grid">
-                        <div class="category-item" onclick="filterByCategory('choice')">
+                        <div class="category-item" onclick="filterByCategory('healthy')" role="button" tabindex="0" aria-label="Browse healthy food">
                             <div class="category-icon">
-                                <img src="https://cdn-icons-png.flaticon.com/512/2515/2515183.png" alt="Dahar Choice">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1147/1147834.png" alt="Healthy food icon">
                             </div>
-                            <span>Dahar Choice</span>
+                            <span>Healthy Choice</span>
                         </div>
-                        <div class="category-item" onclick="filterByCategory('drink')">
+                        
+                        <div class="category-item" onclick="filterByCategory('drink')" role="button" tabindex="0" aria-label="Browse drinks">
                             <div class="category-icon">
-                                <img src="https://cdn-icons-png.flaticon.com/512/920/920710.png" alt="Drink">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2276/2276931.png" alt="Drinks icon">
                             </div>
-                            <span>Drink</span>
+                            <span>Fresh Drinks</span>
                         </div>
-                        <div class="category-item" onclick="filterByCategory('beef')">
+                        
+                        <div class="category-item" onclick="filterByCategory('lunch')" role="button" tabindex="0" aria-label="Browse lunch menu">
                             <div class="category-icon">
-                                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Beef">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Lunch icon">
                             </div>
-                            <span>Beef</span>
+                            <span>Premium Lunch</span>
                         </div>
-                        <div class="category-item" onclick="filterByCategory('healthy')">
+                        
+                        <div class="category-item" onclick="filterByCategory('dinner')" role="button" tabindex="0" aria-label="Browse dinner menu">
                             <div class="category-icon">
-                                <img src="https://cdn-icons-png.flaticon.com/512/1625/1625048.png" alt="Healthy">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png" alt="Dinner icon">
                             </div>
-                            <span>Healthy</span>
+                            <span>Gourmet Dinner</span>
                         </div>
-                        <div class="category-item" onclick="filterByCategory('juice')">
+                        
+                        <div class="category-item" onclick="filterByCategory('snack')" role="button" tabindex="0" aria-label="Browse snacks">
                             <div class="category-icon">
-                                <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png" alt="Juice">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046751.png" alt="Snacks icon">
                             </div>
-                            <span>Juice</span>
+                            <span>Quick Bites</span>
                         </div>
                     </div>
                 </section>
 
-                <!-- Today's Best Deals -->
-                <section class="deals-section">
+                <!-- Special Deals Section -->
+                <section class="deals-section" aria-labelledby="deals-heading">
+                    <div class="section-header">
+                        <h2 id="deals-heading">🎁 Special Deals</h2>
+                    </div>
+                    
                     <div class="deals-grid">
                         <div class="deal-card red">
                             <div class="deal-content">
-                                <h3>Today's Best<br>Deals</h3>
+                                <h3>🔥 Flash Sale<br>Up to 50% OFF</h3>
                             </div>
                             <div class="deal-image">
-                                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=120&h=120&fit=crop" alt="Food">
+                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=100&h=100&fit=crop" alt="Pizza deal">
                             </div>
                         </div>
+                        
                         <div class="deal-card orange">
                             <div class="deal-content">
-                                <h3>Weekly Best<br>Deals</h3>
+                                <h3>💰 Weekend Special<br>Buy 2 Get 1 Free</h3>
                             </div>
                             <div class="deal-image">
-                                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=120&h=120&fit=crop" alt="Food">
+                                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" alt="Burger deal">
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- All Menu Items -->
-                <section class="menu-modern">
-                    <div id="menuItems" class="menu-grid-modern">
-                        <!-- Menu items will be loaded here -->
+                <!-- Menu Items Section -->
+                <section class="menu-modern" aria-labelledby="menu-heading">
+                    <div class="section-header">
+                        <h2 id="menu-heading">🍽️ All Menu</h2>
+                        <button class="see-all-btn" onclick="navigateToExplore()" aria-label="See all menu items">
+                            Browse All <i class="fas fa-grid-2"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="menuItems" class="menu-grid-modern animate-fadeIn">
+                        <!-- Menu items will be dynamically loaded here -->
                     </div>
                 </section>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profileSection" class="profile-section hidden">
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <div class="profile-avatar-large">
+                            <img id="profileAvatarLarge" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=90&h=90&fit=crop&crop=face" alt="Profile">
+                            <div class="profile-status-badge">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                        </div>
+                        <div class="profile-details">
+                            <h2 id="profileName">Nathan</h2>
+                            <p>🌟 Premium Member</p>
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number" id="totalOrders">12</span>
+                                    <span class="stat-label">Orders</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="totalSpent">฿2,450</span>
+                                    <span class="stat-label">Spent</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="memberSince">6</span>
+                                    <span class="stat-label">Months</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="quick-action-item" onclick="showRecentOrders()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <span>Recent</span>
+                    </div>
+                    <div class="quick-action-item" onclick="showProfileFavorites()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <span>Favorites</span>
+                    </div>
+                    <div class="quick-action-item" onclick="showRewards()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <span>Rewards</span>
+                    </div>
+                    <div class="quick-action-item" onclick="shareApp()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <span>Share</span>
+                    </div>
+                </div>
+                
+                <!-- Profile Menu -->
+                <div class="profile-menu">
+                    <!-- Account Section -->
+                    <div class="menu-section">
+                        <h3 class="section-title">👤 Account</h3>
+                        
+                        <div class="profile-item" onclick="editProfile()" role="button" tabindex="0" aria-label="Edit profile">
+                            <div class="profile-item-icon account">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Edit Profile</h4>
+                                <p>Update your personal information</p>
+                                <small>Name, photo, preferences</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <div class="profile-item" onclick="editAddress()" role="button" tabindex="0" aria-label="Edit delivery address">
+                            <div class="profile-item-icon location">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Delivery Address</h4>
+                                <p id="deliveryAddress">Home - Bangkok, Thailand</p>
+                                <small>Manage your delivery locations</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <div class="profile-item" onclick="showPaymentMethods()" role="button" tabindex="0" aria-label="Payment methods">
+                            <div class="profile-item-icon payment">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Payment Methods</h4>
+                                <p>Manage cards and payment options</p>
+                                <small>Credit cards, digital wallets</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Orders Section -->
+                    <div class="menu-section">
+                        <h3 class="section-title">🍽️ Orders</h3>
+                        
+                        <div class="profile-item" onclick="showOrderHistory()" role="button" tabindex="0" aria-label="View order history">
+                            <div class="profile-item-icon orders">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Order History</h4>
+                                <p>View your past orders</p>
+                                <small>Track your food journey</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <div class="profile-item" onclick="showProfileFavorites()" role="button" tabindex="0" aria-label="View favorite items">
+                            <div class="profile-item-icon favorites">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>My Favorites</h4>
+                                <p id="favoritesCount">0 items</p>
+                                <small>Your favorite food items</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <div class="profile-item" onclick="showRewards()" role="button" tabindex="0" aria-label="Rewards and points">
+                            <div class="profile-item-icon rewards">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Rewards & Points</h4>
+                                <p>850 points available</p>
+                                <small>Earn points with every order</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- App Section -->
+                    <div class="menu-section">
+                        <h3 class="section-title">⚙️ App</h3>
+                        
+                        <div class="profile-item" onclick="showNotificationSettings()" role="button" tabindex="0" aria-label="Notification settings">
+                            <div class="profile-item-icon notifications">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Notifications</h4>
+                                <p>Manage your alerts</p>
+                                <small>Order updates, promotions</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <div class="profile-item" onclick="showSettings()" role="button" tabindex="0" aria-label="App settings">
+                            <div class="profile-item-icon settings">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Settings</h4>
+                                <p>App preferences</p>
+                                <small>Language, theme, privacy</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <div class="profile-item" onclick="showHelp()" role="button" tabindex="0" aria-label="Help and support">
+                            <div class="profile-item-icon help">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>Help & Support</h4>
+                                <p>Get assistance</p>
+                                <small>FAQs, contact support</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <div class="profile-item" onclick="showAbout()" role="button" tabindex="0" aria-label="About app">
+                            <div class="profile-item-icon about">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="profile-item-content">
+                                <h4>About</h4>
+                                <p>App version 2.1.0</p>
+                                <small>Terms, privacy, licenses</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Logout Button -->
+                    <div class="logout-section">
+                        <button class="logout-btn" onclick="logout()" aria-label="Sign out">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sign Out</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </main>
 
         <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <div class="nav-item active">
+        <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+            <div class="nav-item active" onclick="navigateToHome()" role="button" tabindex="0" aria-label="Home page">
                 <i class="fas fa-home"></i>
-                <span>หน้าแรก</span>
+                <span>Home</span>
             </div>
-            <div class="nav-item">
-                <i class="fas fa-list"></i>
-                <span>เมนู</span>
+            
+            <div class="nav-item" onclick="navigateToExplore()" role="button" tabindex="0" aria-label="Explore menu">
+                <i class="fas fa-compass"></i>
+                <span>Explore</span>
             </div>
-            <div class="nav-item cart-nav" onclick="toggleCart()">
+            
+            <div class="nav-item cart-nav" onclick="toggleCart()" role="button" tabindex="0" aria-label="Shopping cart">
                 <div class="nav-cart-icon">
                     <i class="fas fa-shopping-cart"></i>
-                    <span id="cartBadgeNav" class="cart-badge-nav">0</span>
+                    <span class="cart-badge-nav" id="cartBadgeNav">0</span>
                 </div>
-                <span>ตะกร้า</span>
+                <span>Cart</span>
             </div>
-            <div class="nav-item">
+            
+            <div class="nav-item" onclick="navigateToFavorites()" role="button" tabindex="0" aria-label="Favorite items">
                 <i class="fas fa-heart"></i>
-                <span>ชื่นชอบ</span>
+                <span>Favorites</span>
             </div>
-            <div class="nav-item">
+            
+            <div class="nav-item" onclick="navigateToProfile()" role="button" tabindex="0" aria-label="User profile">
                 <i class="fas fa-user"></i>
-                <span>โปรไฟล์</span>
+                <span>Profile</span>
             </div>
         </nav>
 
         <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar-modern">
+        <aside id="cartSidebar" class="cart-sidebar-modern" role="dialog" aria-labelledby="cart-title" aria-modal="true">
             <div class="cart-header-modern">
-                <h3>ตะกร้าสินค้า</h3>
-                <button class="close-cart-modern" onclick="toggleCart()">
+                <h3 id="cart-title">🛒 Your Order</h3>
+                <button class="close-cart-modern" onclick="toggleCart()" aria-label="Close cart">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div id="cartItems" class="cart-items-modern">
-                <!-- Cart items will be loaded here -->
+            <div class="cart-items-modern" id="cartItems">
+                <div class="empty-cart-modern">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some delicious food from the menu</p>
+                </div>
             </div>
             
             <div class="cart-footer-modern">
                 <div class="delivery-info">
-                    <div class="delivery-time">
-                        <i class="fas fa-clock"></i>
-                        <span>ส่งภายใน 30-45 นาที</span>
+                    <div>
+                        <i class="fas fa-motorcycle"></i>
+                        <span>Delivery: 30-45 min</span>
                     </div>
-                    <div class="delivery-fee">
-                        <span>ค่าส่ง: ฿25</span>
+                    <div>
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Fee: ฿5</span>
                     </div>
                 </div>
+                
                 <div class="total-modern">
-                    <span>รวมทั้งสิ้น</span>
+                    <span>Total:</span>
                     <strong>฿<span id="totalPrice">0</span></strong>
                 </div>
-                <button class="checkout-btn-modern" onclick="checkout()">
+                
+                <button class="checkout-btn-modern" onclick="checkout()" disabled aria-label="Proceed to checkout">
                     <i class="fas fa-credit-card"></i>
-                    สั่งซื้อ
+                    <span>Checkout Now</span>
                 </button>
             </div>
-        </div>
+        </aside>
 
-        <!-- Address Edit Modal -->
-        <div id="addressModal" class="address-modal">
+        <!-- Address Modal -->
+        <div id="addressModal" class="address-modal" role="dialog" aria-labelledby="address-title" aria-modal="true">
             <div class="address-content">
                 <div class="address-header">
-                    <h3>แก้ไขที่อยู่จัดส่ง</h3>
-                    <button onclick="closeAddressModal()">
+                    <h3 id="address-title">📍 Edit Delivery Address</h3>
+                    <button onclick="closeAddressModal()" aria-label="Close address modal">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
+                
                 <div class="address-body">
-                    <div class="address-form">
-                        <label>ชื่อที่อยู่</label>
-                        <input type="text" id="addressName" placeholder="บ้าน, ที่ทำงาน, อื่นๆ" value="บ้าน">
+                    <form class="address-form" onsubmit="event.preventDefault(); saveAddress();">
+                        <div>
+                            <label for="addressName">Address Name *</label>
+                            <input type="text" id="addressName" placeholder="e.g., Home, Office" required>
+                        </div>
                         
-                        <label>ที่อยู่เต็ม</label>
-                        <textarea id="fullAddress" placeholder="บ้านเลขที่, ถนน, ตำบล, อำเภอ, จังหวัด">123 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110</textarea>
+                        <div>
+                            <label for="fullAddress">Full Address *</label>
+                            <input type="text" id="fullAddress" placeholder="Street, District, City" required>
+                        </div>
                         
-                        <label>เบอร์โทรศัพท์</label>
-                        <input type="tel" id="phoneNumber" placeholder="0XX-XXX-XXXX" value="080-123-4567">
+                        <div>
+                            <label for="phoneNumber">Phone Number *</label>
+                            <input type="tel" id="phoneNumber" placeholder="080-123-4567" required>
+                        </div>
                         
-                        <label>หมายเหตุ (ถ้ามี)</label>
-                        <input type="text" id="addressNote" placeholder="อาคาร, ชั้น, คำแนะนำเพิ่มเติม">
-                    </div>
+                        <div>
+                            <label for="addressNote">Additional Notes</label>
+                            <textarea id="addressNote" placeholder="Delivery instructions (optional)"></textarea>
+                        </div>
+                    </form>
                 </div>
+                
                 <div class="address-footer">
-                    <button class="cancel-btn" onclick="closeAddressModal()">ยกเลิก</button>
-                    <button class="save-btn" onclick="saveAddress()">บันทึก</button>
+                    <button type="button" class="cancel-btn" onclick="closeAddressModal()">Cancel</button>
+                    <button type="button" class="save-btn" onclick="saveAddress()">Save Address</button>
                 </div>
             </div>
         </div>
 
         <!-- Overlay -->
-        <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
-
-        <!-- Loading -->
-        <div id="loading" class="loading">
-            <div class="spinner-modern">
-                <div class="spinner-circle"></div>
-            </div>
-            <p>กำลังโหลด...</p>
-        </div>
-
-        <!-- Filter Modal -->
-        <div id="filterModal" class="filter-modal">
-            <div class="filter-content">
-                <div class="filter-header">
-                    <h3>ตัวกรอง</h3>
-                    <button onclick="toggleFilters()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="filter-body">
-                    <div class="filter-section">
-                        <h4>ช่วงราคา</h4>
-                        <div class="price-range">
-                            <button class="price-btn">฿0-50</button>
-                            <button class="price-btn">฿51-100</button>
-                            <button class="price-btn">฿101-200</button>
-                            <button class="price-btn">฿201+</button>
-                        </div>
-                    </div>
-                    <div class="filter-section">
-                        <h4>เรียงตาม</h4>
-                        <div class="sort-options">
-                            <label><input type="radio" name="sort" value="popular"> ยอดนิยม</label>
-                            <label><input type="radio" name="sort" value="price-low"> ราคาต่ำ-สูง</label>
-                            <label><input type="radio" name="sort" value="price-high"> ราคาสูง-ต่ำ</label>
-                            <label><input type="radio" name="sort" value="rating"> คะแนนสูงสุด</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="filter-footer">
-                    <button class="clear-filter-btn">ล้างตัวกรอง</button>
-                    <button class="apply-filter-btn">ใช้ตัวกรอง</button>
-                </div>
-            </div>
-        </div>
+        <div id="overlay" class="overlay" onclick="closeAllModals()" aria-hidden="true"></div>
     </div>
 
+    <!-- Scripts -->
     <script src="script.js"></script>
+    
+    <!-- PWA Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
 </body>
 </html> 
