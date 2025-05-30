@@ -6,59 +6,196 @@
     <title>ระบบสั่งอาหาร - LINE LIFF</title>
     <link rel="stylesheet" href="styles.css">
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div id="app">
         <!-- Header -->
-        <header class="header">
-            <div class="container">
-                <h1>🍽️ ร้านอาหารออนไลน์</h1>
-                <div class="user-info">
-                    <span id="userName">กำลังโหลด...</span>
-                    <div class="cart-icon" onclick="toggleCart()">
-                        🛒 <span id="cartCount">0</span>
+        <header class="modern-header">
+            <div class="header-top">
+                <div class="location-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <span class="location-label">ส่งไปที่</span>
+                        <span class="location-name" id="locationName">บ้าน</span>
                     </div>
+                </div>
+                <div class="header-actions">
+                    <div class="profile-circle">
+                        <img id="userAvatar" src="https://via.placeholder.com/40x40/FF5722/ffffff?text=U" alt="Profile">
+                    </div>
+                    <button class="menu-btn" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartBadge" class="cart-badge">0</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="ค้นหาอาหาร, ร้านอาหาร..." id="searchInput">
+                    <button class="filter-btn" onclick="toggleFilters()">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
-        <!-- Categories -->
-        <section class="categories">
-            <div class="container">
-                <h2>หมวดหมู่อาหาร</h2>
-                <div class="category-tabs">
-                    <button class="category-tab active" onclick="filterCategory('all')">ทั้งหมด</button>
-                    <button class="category-tab" onclick="filterCategory('rice')">ข้าว</button>
-                    <button class="category-tab" onclick="filterCategory('noodle')">เส้น</button>
-                    <button class="category-tab" onclick="filterCategory('drink')">เครื่องดื่ม</button>
-                    <button class="category-tab" onclick="filterCategory('dessert')">ของหวาน</button>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Popular Brands -->
+            <section class="popular-brands">
+                <h2>ร้านยอดนิยม</h2>
+                <div class="brands-slider">
+                    <div class="brand-item">
+                        <div class="brand-logo">🍕</div>
+                        <span>พิซซ่า</span>
+                    </div>
+                    <div class="brand-item">
+                        <div class="brand-logo">🍔</div>
+                        <span>เบอร์เกอร์</span>
+                    </div>
+                    <div class="brand-item">
+                        <div class="brand-logo">🍜</div>
+                        <span>ก๋วยเตี๋ยว</span>
+                    </div>
+                    <div class="brand-item">
+                        <div class="brand-logo">🍱</div>
+                        <span>ข้าวกล่อง</span>
+                    </div>
+                    <div class="brand-item">
+                        <div class="brand-logo">🧋</div>
+                        <span>เครื่องดื่ม</span>
+                    </div>
+                    <div class="brand-item">
+                        <div class="brand-logo">🍰</div>
+                        <span>ของหวาน</span>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Menu Items -->
-        <section class="menu">
-            <div class="container">
-                <div id="menuItems" class="menu-grid">
+            <!-- Today's Featured -->
+            <section class="featured-section">
+                <h2>โปรโมชั่นวันนี้</h2>
+                <div class="featured-card">
+                    <div class="featured-content">
+                        <div class="featured-text">
+                            <span class="discount-badge">ลดสูงสุด 60%</span>
+                            <h3>พิซซ่าสไตล์อิตาเลียน</h3>
+                            <p>สั่งขั้นต่ำ ฿299</p>
+                            <button class="order-now-btn">สั่งเลย</button>
+                        </div>
+                        <div class="featured-image">
+                            <img src="https://via.placeholder.com/120x120/FF5722/ffffff?text=🍕" alt="Pizza">
+                        </div>
+                    </div>
+                    <div class="featured-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories -->
+            <section class="categories-modern">
+                <div class="categories-header">
+                    <h2>สำรวจเมนู</h2>
+                    <button class="see-all-btn" onclick="showAllCategories()">ดูทั้งหมด</button>
+                </div>
+                <div class="category-tabs-modern">
+                    <button class="category-tab-modern active" onclick="filterCategory('all')">
+                        <i class="fas fa-utensils"></i>
+                        ทั้งหมด
+                    </button>
+                    <button class="category-tab-modern" onclick="filterCategory('rice')">
+                        <i class="fas fa-seedling"></i>
+                        ข้าว
+                    </button>
+                    <button class="category-tab-modern" onclick="filterCategory('noodle')">
+                        <i class="fas fa-bowl-food"></i>
+                        เส้น
+                    </button>
+                    <button class="category-tab-modern" onclick="filterCategory('drink')">
+                        <i class="fas fa-glass-water"></i>
+                        เครื่องดื่ม
+                    </button>
+                    <button class="category-tab-modern" onclick="filterCategory('dessert')">
+                        <i class="fas fa-ice-cream"></i>
+                        ของหวาน
+                    </button>
+                </div>
+            </section>
+
+            <!-- Menu Items -->
+            <section class="menu-modern">
+                <div id="menuItems" class="menu-grid-modern">
                     <!-- Menu items will be loaded here -->
                 </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>หน้าแรก</span>
             </div>
-        </section>
+            <div class="nav-item">
+                <i class="fas fa-compass"></i>
+                <span>สำรวจ</span>
+            </div>
+            <div class="nav-item cart-nav" onclick="toggleCart()">
+                <div class="nav-cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartBadgeNav" class="cart-badge-nav">0</span>
+                </div>
+                <span>ตะกร้า</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>ชื่นชอบ</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>โปรไฟล์</span>
+            </div>
+        </nav>
 
         <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
+        <div id="cartSidebar" class="cart-sidebar-modern">
+            <div class="cart-header-modern">
                 <h3>ตะกร้าสินค้า</h3>
-                <button class="close-cart" onclick="toggleCart()">✕</button>
+                <button class="close-cart-modern" onclick="toggleCart()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div id="cartItems" class="cart-items">
+            
+            <div id="cartItems" class="cart-items-modern">
                 <!-- Cart items will be loaded here -->
             </div>
-            <div class="cart-footer">
-                <div class="total">
-                    <strong>รวม: ฿<span id="totalPrice">0</span></strong>
+            
+            <div class="cart-footer-modern">
+                <div class="delivery-info">
+                    <div class="delivery-time">
+                        <i class="fas fa-clock"></i>
+                        <span>ส่งภายใน 30-45 นาที</span>
+                    </div>
+                    <div class="delivery-fee">
+                        <span>ค่าส่ง: ฿25</span>
+                    </div>
                 </div>
-                <button class="checkout-btn" onclick="checkout()">สั่งซื้อ</button>
+                <div class="total-modern">
+                    <span>รวมทั้งสิ้น</span>
+                    <strong>฿<span id="totalPrice">0</span></strong>
+                </div>
+                <button class="checkout-btn-modern" onclick="checkout()">
+                    <i class="fas fa-credit-card"></i>
+                    สั่งซื้อ
+                </button>
             </div>
         </div>
 
@@ -67,8 +204,46 @@
 
         <!-- Loading -->
         <div id="loading" class="loading">
-            <div class="spinner"></div>
+            <div class="spinner-modern">
+                <div class="spinner-circle"></div>
+            </div>
             <p>กำลังโหลด...</p>
+        </div>
+
+        <!-- Filter Modal -->
+        <div id="filterModal" class="filter-modal">
+            <div class="filter-content">
+                <div class="filter-header">
+                    <h3>ตัวกรอง</h3>
+                    <button onclick="toggleFilters()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="filter-body">
+                    <div class="filter-section">
+                        <h4>ช่วงราคา</h4>
+                        <div class="price-range">
+                            <button class="price-btn">฿0-50</button>
+                            <button class="price-btn">฿51-100</button>
+                            <button class="price-btn">฿101-200</button>
+                            <button class="price-btn">฿201+</button>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h4>เรียงตาม</h4>
+                        <div class="sort-options">
+                            <label><input type="radio" name="sort" value="popular"> ยอดนิยม</label>
+                            <label><input type="radio" name="sort" value="price-low"> ราคาต่ำ-สูง</label>
+                            <label><input type="radio" name="sort" value="price-high"> ราคาสูง-ต่ำ</label>
+                            <label><input type="radio" name="sort" value="rating"> คะแนนสูงสุด</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-footer">
+                    <button class="clear-filter-btn">ล้างตัวกรอง</button>
+                    <button class="apply-filter-btn">ใช้ตัวกรอง</button>
+                </div>
+            </div>
         </div>
     </div>
 
