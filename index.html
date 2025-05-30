@@ -13,129 +13,200 @@
     <div id="app">
         <!-- Header -->
         <header class="modern-header">
-            <div class="header-top">
-                <div class="location-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <div>
-                        <span class="location-label">ส่งไปที่</span>
-                        <span class="location-name" id="locationName">บ้าน</span>
-                    </div>
+            <div class="header-greeting">
+                <div class="greeting-text">
+                    <h1>Hai <span id="userName">Nathan</span> 👋</h1>
+                    <p>what do you want eat today?</p>
                 </div>
-                <div class="header-actions">
-                    <div class="profile-circle">
-                        <img id="userAvatar" src="https://via.placeholder.com/40x40/FF5722/ffffff?text=U" alt="Profile">
-                    </div>
-                    <button class="menu-btn" onclick="toggleCart()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartBadge" class="cart-badge">0</span>
-                    </button>
+                <div class="profile-circle">
+                    <img id="userAvatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Profile">
                 </div>
             </div>
             
             <!-- Search Bar -->
             <div class="search-container">
-                <div class="search-box">
+                <div class="search-box-modern">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="ค้นหาอาหาร, ร้านอาหาร..." id="searchInput">
-                    <button class="filter-btn" onclick="toggleFilters()">
-                        <i class="fas fa-sliders-h"></i>
-                    </button>
+                    <input type="text" placeholder="Cari makanan atau minuman" id="searchInput">
                 </div>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Popular Brands -->
-            <section class="popular-brands">
-                <h2>ร้านยอดนิยม</h2>
-                <div class="brands-slider">
-                    <div class="brand-item">
-                        <div class="brand-logo">🍕</div>
-                        <span>พิซซ่า</span>
-                    </div>
-                    <div class="brand-item">
-                        <div class="brand-logo">🍔</div>
-                        <span>เบอร์เกอร์</span>
-                    </div>
-                    <div class="brand-item">
-                        <div class="brand-logo">🍜</div>
-                        <span>ก๋วยเตี๋ยว</span>
-                    </div>
-                    <div class="brand-item">
-                        <div class="brand-logo">🍱</div>
-                        <span>ข้าวกล่อง</span>
-                    </div>
-                    <div class="brand-item">
-                        <div class="brand-logo">🧋</div>
-                        <span>เครื่องดื่ม</span>
-                    </div>
-                    <div class="brand-item">
-                        <div class="brand-logo">🍰</div>
-                        <span>ของหวาน</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Today's Featured -->
-            <section class="featured-section">
-                <h2>โปรโมชั่นวันนี้</h2>
-                <div class="featured-card">
-                    <div class="featured-content">
-                        <div class="featured-text">
-                            <span class="discount-badge">ลดสูงสุด 60%</span>
-                            <h3>พิซซ่าสไตล์อิตาเลียน</h3>
-                            <p>สั่งขั้นต่ำ ฿299</p>
-                            <button class="order-now-btn">สั่งเลย</button>
+            <!-- Profile Section -->
+            <section id="profileSection" class="profile-section hidden">
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <div class="profile-avatar-large">
+                            <img id="profileAvatarLarge" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Profile">
                         </div>
-                        <div class="featured-image">
-                            <img src="https://via.placeholder.com/120x120/FF5722/ffffff?text=🍕" alt="Pizza">
+                        <div class="profile-details">
+                            <h2 id="profileName">Nathan</h2>
+                            <p id="profilePhone">📱 +66 XX-XXX-XXXX</p>
                         </div>
                     </div>
-                    <div class="featured-dots">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
+                </div>
+
+                <div class="profile-menu">
+                    <!-- Delivery Address -->
+                    <div class="profile-item" onclick="editAddress()">
+                        <div class="profile-item-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="profile-item-content">
+                            <h4>ที่อยู่จัดส่ง</h4>
+                            <p id="deliveryAddress">บ้าน - กรุงเทพมหานคร</p>
+                            <small>คลิกเพื่อแก้ไข</small>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <!-- Order History -->
+                    <div class="profile-item" onclick="showOrderHistory()">
+                        <div class="profile-item-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="profile-item-content">
+                            <h4>ประวัติการสั่งซื้อ</h4>
+                            <p>ดูออเดอร์ที่ผ่านมา</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <!-- Favorites -->
+                    <div class="profile-item" onclick="showProfileFavorites()">
+                        <div class="profile-item-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="profile-item-content">
+                            <h4>รายการโปรด</h4>
+                            <p id="favoritesCount">0 รายการ</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="profile-item" onclick="showSettings()">
+                        <div class="profile-item-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="profile-item-content">
+                            <h4>การตั้งค่า</h4>
+                            <p>แจ้งเตือน, ภาษา</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <!-- Help -->
+                    <div class="profile-item" onclick="showHelp()">
+                        <div class="profile-item-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="profile-item-content">
+                            <h4>ช่วยเหลือ</h4>
+                            <p>คำถามที่พบบ่อย, ติดต่อเรา</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
             </section>
 
-            <!-- Categories -->
-            <section class="categories-modern">
-                <div class="categories-header">
-                    <h2>สำรวจเมนู</h2>
-                    <button class="see-all-btn" onclick="showAllCategories()">ดูทั้งหมด</button>
-                </div>
-                <div class="category-tabs-modern">
-                    <button class="category-tab-modern active" onclick="filterCategory('all')">
-                        <i class="fas fa-utensils"></i>
-                        ทั้งหมด
-                    </button>
-                    <button class="category-tab-modern" onclick="filterCategory('rice')">
-                        <i class="fas fa-seedling"></i>
-                        ข้าว
-                    </button>
-                    <button class="category-tab-modern" onclick="filterCategory('noodle')">
-                        <i class="fas fa-bowl-food"></i>
-                        เส้น
-                    </button>
-                    <button class="category-tab-modern" onclick="filterCategory('drink')">
-                        <i class="fas fa-glass-water"></i>
-                        เครื่องดื่ม
-                    </button>
-                    <button class="category-tab-modern" onclick="filterCategory('dessert')">
-                        <i class="fas fa-ice-cream"></i>
-                        ของหวาน
-                    </button>
-                </div>
-            </section>
+            <!-- Home Content -->
+            <div id="homeContent">
+                <!-- Popular Menus -->
+                <section class="popular-menus">
+                    <div class="section-header">
+                        <h2>Popular menus</h2>
+                        <button class="see-all-btn">See All</button>
+                    </div>
+                    
+                    <!-- Category Tabs -->
+                    <div class="category-tabs-horizontal">
+                        <button class="category-tab-horizontal active" onclick="filterPopular('breakfast')">Breakfast</button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('lunch')">Lunch</button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('dinner')">Dinner</button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('snack')">Snack</button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('drink')">Drink</button>
+                        <button class="category-tab-horizontal" onclick="filterPopular('healthy')">Healthy</button>
+                    </div>
+                    
+                    <!-- Popular Menu Cards -->
+                    <div class="popular-menu-grid" id="popularMenuGrid">
+                        <!-- Popular menu items will be loaded here -->
+                    </div>
+                </section>
 
-            <!-- Menu Items -->
-            <section class="menu-modern">
-                <div id="menuItems" class="menu-grid-modern">
-                    <!-- Menu items will be loaded here -->
-                </div>
-            </section>
+                <!-- Categories -->
+                <section class="categories-section">
+                    <div class="section-header">
+                        <h2>Category</h2>
+                        <button class="see-all-btn">See All</button>
+                    </div>
+                    
+                    <div class="category-grid">
+                        <div class="category-item" onclick="filterByCategory('choice')">
+                            <div class="category-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2515/2515183.png" alt="Dahar Choice">
+                            </div>
+                            <span>Dahar Choice</span>
+                        </div>
+                        <div class="category-item" onclick="filterByCategory('drink')">
+                            <div class="category-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/920/920710.png" alt="Drink">
+                            </div>
+                            <span>Drink</span>
+                        </div>
+                        <div class="category-item" onclick="filterByCategory('beef')">
+                            <div class="category-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Beef">
+                            </div>
+                            <span>Beef</span>
+                        </div>
+                        <div class="category-item" onclick="filterByCategory('healthy')">
+                            <div class="category-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1625/1625048.png" alt="Healthy">
+                            </div>
+                            <span>Healthy</span>
+                        </div>
+                        <div class="category-item" onclick="filterByCategory('juice')">
+                            <div class="category-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png" alt="Juice">
+                            </div>
+                            <span>Juice</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Today's Best Deals -->
+                <section class="deals-section">
+                    <div class="deals-grid">
+                        <div class="deal-card red">
+                            <div class="deal-content">
+                                <h3>Today's Best<br>Deals</h3>
+                            </div>
+                            <div class="deal-image">
+                                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=120&h=120&fit=crop" alt="Food">
+                            </div>
+                        </div>
+                        <div class="deal-card orange">
+                            <div class="deal-content">
+                                <h3>Weekly Best<br>Deals</h3>
+                            </div>
+                            <div class="deal-image">
+                                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=120&h=120&fit=crop" alt="Food">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- All Menu Items -->
+                <section class="menu-modern">
+                    <div id="menuItems" class="menu-grid-modern">
+                        <!-- Menu items will be loaded here -->
+                    </div>
+                </section>
+            </div>
         </main>
 
         <!-- Bottom Navigation -->
@@ -145,8 +216,8 @@
                 <span>หน้าแรก</span>
             </div>
             <div class="nav-item">
-                <i class="fas fa-compass"></i>
-                <span>สำรวจ</span>
+                <i class="fas fa-list"></i>
+                <span>เมนู</span>
             </div>
             <div class="nav-item cart-nav" onclick="toggleCart()">
                 <div class="nav-cart-icon">
@@ -199,8 +270,39 @@
             </div>
         </div>
 
+        <!-- Address Edit Modal -->
+        <div id="addressModal" class="address-modal">
+            <div class="address-content">
+                <div class="address-header">
+                    <h3>แก้ไขที่อยู่จัดส่ง</h3>
+                    <button onclick="closeAddressModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="address-body">
+                    <div class="address-form">
+                        <label>ชื่อที่อยู่</label>
+                        <input type="text" id="addressName" placeholder="บ้าน, ที่ทำงาน, อื่นๆ" value="บ้าน">
+                        
+                        <label>ที่อยู่เต็ม</label>
+                        <textarea id="fullAddress" placeholder="บ้านเลขที่, ถนน, ตำบล, อำเภอ, จังหวัด">123 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110</textarea>
+                        
+                        <label>เบอร์โทรศัพท์</label>
+                        <input type="tel" id="phoneNumber" placeholder="0XX-XXX-XXXX" value="080-123-4567">
+                        
+                        <label>หมายเหตุ (ถ้ามี)</label>
+                        <input type="text" id="addressNote" placeholder="อาคาร, ชั้น, คำแนะนำเพิ่มเติม">
+                    </div>
+                </div>
+                <div class="address-footer">
+                    <button class="cancel-btn" onclick="closeAddressModal()">ยกเลิก</button>
+                    <button class="save-btn" onclick="saveAddress()">บันทึก</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Overlay -->
-        <div id="overlay" class="overlay" onclick="toggleCart()"></div>
+        <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
 
         <!-- Loading -->
         <div id="loading" class="loading">
