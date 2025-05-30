@@ -1,0 +1,35 @@
+{
+  "name": "line-liff-food-ordering",
+  "version": "1.0.0",
+  "description": "ระบบสั่งอาหารผ่าน LINE LIFF - Food ordering system via LINE LIFF",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8080 -c-1",
+    "dev": "npx live-server --port=8080",
+    "build": "echo 'No build process needed for static files'",
+    "deploy": "echo 'Deploy to your hosting service'"
+  },
+  "keywords": [
+    "line",
+    "liff",
+    "food-ordering",
+    "thailand",
+    "restaurant",
+    "mobile-app"
+  ],
+  "author": "LINE LIFF Developer",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/line-liff-food-ordering.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/line-liff-food-ordering/issues"
+  },
+  "homepage": "https://github.com/yourusername/line-liff-food-ordering#readme"
+} 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบสั่งอาหาร - LINE LIFF</title>
+    <link rel="stylesheet" href="styles.css">
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <h1>🍽️ ร้านอาหารออนไลน์</h1>
+                <div class="user-info">
+                    <span id="userName">กำลังโหลด...</span>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        🛒 <span id="cartCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Categories -->
+        <section class="categories">
+            <div class="container">
+                <h2>หมวดหมู่อาหาร</h2>
+                <div class="category-tabs">
+                    <button class="category-tab active" onclick="filterCategory('all')">ทั้งหมด</button>
+                    <button class="category-tab" onclick="filterCategory('rice')">ข้าว</button>
+                    <button class="category-tab" onclick="filterCategory('noodle')">เส้น</button>
+                    <button class="category-tab" onclick="filterCategory('drink')">เครื่องดื่ม</button>
+                    <button class="category-tab" onclick="filterCategory('dessert')">ของหวาน</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Items -->
+        <section class="menu">
+            <div class="container">
+                <div id="menuItems" class="menu-grid">
+                    <!-- Menu items will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3>ตะกร้าสินค้า</h3>
+                <button class="close-cart" onclick="toggleCart()">✕</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-footer">
+                <div class="total">
+                    <strong>รวม: ฿<span id="totalPrice">0</span></strong>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">สั่งซื้อ</button>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div id="overlay" class="overlay" onclick="toggleCart()"></div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>กำลังโหลด...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
