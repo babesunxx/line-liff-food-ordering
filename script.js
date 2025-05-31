@@ -1,110 +1,129 @@
-// ===== GRABFOOD-INSPIRED JAVASCRIPT =====
+// ===== FOODFLOW - PREMIUM FOOD DELIVERY SYSTEM =====
 
 // Global Variables
 let liff;
 let userProfile = null;
-let cart = [];
-let favorites = JSON.parse(localStorage.getItem('grabfood_favorites')) || [];
-let currentSection = 'home';
+let cart = JSON.parse(localStorage.getItem('foodflow_cart')) || [];
+let favorites = JSON.parse(localStorage.getItem('foodflow_favorites')) || [];
+let currentSection = 'hero';
 let searchTimeout;
+let isLoading = false;
 
-// GrabFood Restaurant Data
+// Enhanced Restaurant Data
 const restaurants = [
     {
         id: 1,
-        name: "McDonald's",
-        cuisine: "Fast Food, Burger",
-        image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=300&h=200&fit=crop",
-        rating: 4.5,
-        deliveryTime: "15-25 นาที",
-        deliveryFee: "฿15",
-        badge: "โปรโมชั่น",
-        promo: "ฟรีค่าส่ง",
-        category: "western"
+        name: "Gourmet Fusion",
+        cuisine: "Modern Asian, Fusion",
+        image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop",
+        rating: 4.8,
+        deliveryTime: "25-35 นาที",
+        deliveryFee: 35,
+        badge: "Premium",
+        promo: "ลด 20% สำหรับออเดอร์แรก",
+        category: "fusion",
+        price: 3,
+        distance: 0.8,
+        specialties: ["Wagyu Beef", "Truffle Pasta", "Signature Cocktails"],
+        openTime: "11:00",
+        closeTime: "23:00",
+        isNew: false,
+        isFeatured: true
     },
     {
         id: 2,
-        name: "KFC",
-        cuisine: "Fried Chicken, Fast Food",
-        image: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=300&h=200&fit=crop",
-        rating: 4.3,
-        deliveryTime: "20-30 นาที",
-        deliveryFee: "฿20",
+        name: "Authentic Thai House",
+        cuisine: "Traditional Thai, Street Food",
+        image: "https://images.unsplash.com/photo-1559847844-d721426d6edc?w=400&h=300&fit=crop",
+        rating: 4.6,
+        deliveryTime: "15-25 นาที",
+        deliveryFee: 25,
         badge: "ยอดนิยม",
-        promo: "ลด 20%",
-        category: "western"
+        promo: "ฟรีส้มตำ เมื่อสั่งครบ ฿250",
+        category: "thai",
+        price: 2,
+        distance: 0.5,
+        specialties: ["Pad Thai", "Som Tam", "Tom Yum"],
+        openTime: "10:00",
+        closeTime: "22:00",
+        isNew: false,
+        isFeatured: true
     },
     {
         id: 3,
-        name: "ส้มตำนัวเก้า",
-        cuisine: "อาหารไทย, อีสาน",
-        image: "https://images.unsplash.com/photo-1559847844-d721426d6edc?w=300&h=200&fit=crop",
-        rating: 4.7,
-        deliveryTime: "25-35 นาที",
-        deliveryFee: "฿25",
-        badge: "แนะนำ",
-        promo: "ซื้อ 2 แถม 1",
-        category: "thai"
+        name: "Sakura Sushi Bar",
+        cuisine: "Japanese, Sushi, Sashimi",
+        image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop",
+        rating: 4.9,
+        deliveryTime: "30-40 นาที",
+        deliveryFee: 45,
+        badge: "เชฟแนะนำ",
+        promo: "Set Sushi 50% ลด",
+        category: "japanese",
+        price: 3,
+        distance: 1.2,
+        specialties: ["Omakase", "Fresh Sashimi", "Premium Sake"],
+        openTime: "17:00",
+        closeTime: "24:00",
+        isNew: false,
+        isFeatured: true
     },
     {
         id: 4,
-        name: "Sushi Hiro",
-        cuisine: "อาหารญี่ปุ่น, ซูชิ",
-        image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=300&h=200&fit=crop",
-        rating: 4.6,
-        deliveryTime: "30-40 นาที",
-        deliveryFee: "฿30",
-        badge: "พรีเมียม",
-        promo: "ลด 15%",
-        category: "japanese"
+        name: "Seoul Kitchen",
+        cuisine: "Korean BBQ, K-Food",
+        image: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=400&h=300&fit=crop",
+        rating: 4.7,
+        deliveryTime: "20-30 นาที",
+        deliveryFee: 30,
+        badge: "ใหม่",
+        promo: "เมนูใหม่ ลด 15%",
+        category: "korean",
+        price: 2,
+        distance: 0.9,
+        specialties: ["Korean BBQ", "Kimchi", "Bulgogi"],
+        openTime: "11:30",
+        closeTime: "23:30",
+        isNew: true,
+        isFeatured: true
     },
     {
         id: 5,
-        name: "Seoul Kitchen",
-        cuisine: "อาหารเกาหลี, BBQ",
-        image: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=300&h=200&fit=crop",
+        name: "Burger Station",
+        cuisine: "American, Burgers, Fast Food",
+        image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop",
         rating: 4.4,
-        deliveryTime: "35-45 นาที",
-        deliveryFee: "฿35",
-        badge: "ใหม่",
-        promo: "ลด 25%",
-        category: "korean"
+        deliveryTime: "15-20 นาที",
+        deliveryFee: 20,
+        badge: "ส่งเร็ว",
+        promo: "ซื้อ 2 แถม 1",
+        category: "western",
+        price: 2,
+        distance: 0.3,
+        specialties: ["Signature Burger", "Crispy Fries", "Milkshakes"],
+        openTime: "08:00",
+        closeTime: "22:00",
+        isNew: false,
+        isFeatured: false
     },
     {
         id: 6,
-        name: "Dragon Palace",
-        cuisine: "อาหารจีน, ติ่มซำ",
-        image: "https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=300&h=200&fit=crop",
-        rating: 4.2,
-        deliveryTime: "25-35 นาที",
-        deliveryFee: "฿20",
-        badge: "ยอดนิยม",
-        promo: "ฟรีของหวาน",
-        category: "chinese"
-    },
-    {
-        id: 7,
-        name: "Dessert Heaven",
-        cuisine: "ของหวาน, เค้ก",
-        image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&h=200&fit=crop",
-        rating: 4.8,
-        deliveryTime: "20-30 นาที",
-        deliveryFee: "฿15",
-        badge: "ขายดี",
-        promo: "ซื้อ 1 แถม 1",
-        category: "dessert"
-    },
-    {
-        id: 8,
-        name: "Bubble Tea House",
-        cuisine: "เครื่องดื่ม, ชานมไข่มุก",
-        image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=300&h=200&fit=crop",
+        name: "La Bella Italia",
+        cuisine: "Italian, Pasta, Pizza",
+        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
         rating: 4.5,
-        deliveryTime: "15-25 นาที",
-        deliveryFee: "฿10",
-        badge: "ยอดนิยม",
-        promo: "ลด 30%",
-        category: "drinks"
+        deliveryTime: "25-35 นาที",
+        deliveryFee: 35,
+        badge: "ออเธนติก",
+        promo: "Pizza ที่ 2 ลด 50%",
+        category: "western",
+        price: 3,
+        distance: 1.5,
+        specialties: ["Wood-fired Pizza", "Handmade Pasta", "Tiramisu"],
+        openTime: "12:00",
+        closeTime: "23:00",
+        isNew: false,
+        isFeatured: true
     }
 ];
 
@@ -115,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function initializeApp() {
     try {
+        showLoadingScreen();
+        
         // Initialize LIFF
         await liff.init({ liffId: '2007504943-2vqZgdQz' });
         
@@ -123,215 +144,477 @@ async function initializeApp() {
             updateUserProfile();
         }
         
-        // Load initial data
-        loadRestaurants();
-        updateCartBadge();
+        // Load app data
+        await loadAppData();
+        
+        // Setup event listeners
+        setupEventListeners();
         
         // Hide loading screen
         setTimeout(() => {
-            document.getElementById('loading').classList.add('hidden');
-        }, 1500);
+            hideLoadingScreen();
+        }, 2000);
         
     } catch (error) {
-        console.error('LIFF initialization failed:', error);
-        // Continue without LIFF for testing
+        console.error('App initialization failed:', error);
+        // Fallback for testing
         userProfile = {
             displayName: 'Nathan',
-            pictureUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=90&h=90&fit=crop&crop=face'
+            pictureUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face'
         };
         updateUserProfile();
-        loadRestaurants();
-        updateCartBadge();
-        
-        setTimeout(() => {
-            document.getElementById('loading').classList.add('hidden');
-        }, 1500);
+        await loadAppData();
+        setupEventListeners();
+        setTimeout(hideLoadingScreen, 2000);
     }
+}
+
+function showLoadingScreen() {
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+        loadingScreen.classList.remove('hidden');
+    }
+}
+
+function hideLoadingScreen() {
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+    }
+}
+
+async function loadAppData() {
+    // Simulate API calls
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    loadRecommendations();
+    loadCategories();
+    loadFeaturedRestaurants();
+    loadSpecialOffers();
+    updateCartUI();
+    updateFavoritesCount();
 }
 
 function updateUserProfile() {
     if (userProfile) {
-        const elements = {
-            'headerAvatar': userProfile.pictureUrl,
-            'profileAvatarLarge': userProfile.pictureUrl
-        };
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
         
-        Object.entries(elements).forEach(([id, src]) => {
-            const element = document.getElementById(id);
-            if (element) element.src = src;
-        });
-        
-        const nameElements = document.querySelectorAll('#profileName');
-        nameElements.forEach(el => {
-            if (el) el.textContent = userProfile.displayName || 'Nathan';
-        });
+        if (userAvatar) userAvatar.src = userProfile.pictureUrl;
+        if (userName) userName.textContent = userProfile.displayName || 'Nathan';
     }
 }
 
-// ===== RESTAURANT FUNCTIONS =====
-function loadRestaurants() {
-    const grid = document.getElementById('restaurantGrid');
-    if (!grid) return;
+// ===== SMART RECOMMENDATIONS =====
+function loadRecommendations() {
+    const container = document.getElementById('recommendationCards');
+    if (!container) return;
     
-    grid.innerHTML = restaurants.map(restaurant => createRestaurantCard(restaurant)).join('');
-}
-
-function createRestaurantCard(restaurant) {
-    const isFavorite = favorites.includes(restaurant.id);
+    const recommendations = restaurants.filter(r => r.isFeatured).slice(0, 3);
     
-    return `
-        <div class="restaurant-card" onclick="openRestaurant(${restaurant.id})">
-            <div class="restaurant-image">
+    container.innerHTML = recommendations.map(restaurant => `
+        <div class="recommendation-card" onclick="openRestaurant(${restaurant.id})">
+            <div class="card-image">
                 <img src="${restaurant.image}" alt="${restaurant.name}" loading="lazy">
-                <div class="restaurant-badge">${restaurant.badge}</div>
-                <button class="restaurant-favorite ${isFavorite ? 'active' : ''}" 
+                <div class="card-badge ${restaurant.badge.toLowerCase()}">${restaurant.badge}</div>
+                <button class="favorite-btn ${favorites.includes(restaurant.id) ? 'active' : ''}" 
                         onclick="event.stopPropagation(); toggleFavorite(${restaurant.id})">
                     <i class="fas fa-heart"></i>
                 </button>
             </div>
-            <div class="restaurant-info">
-                <div class="restaurant-name">${restaurant.name}</div>
-                <div class="restaurant-cuisine">${restaurant.cuisine}</div>
-                <div class="restaurant-meta">
+            <div class="card-content">
+                <h3 class="card-title">${restaurant.name}</h3>
+                <p class="card-cuisine">${restaurant.cuisine}</p>
+                <div class="card-meta">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <span>${restaurant.rating}</span>
+                    </div>
+                    <div class="delivery-time">
+                        <i class="fas fa-clock"></i>
+                        <span>${restaurant.deliveryTime}</span>
+                    </div>
+                    <div class="price-level">
+                        ${getPriceLevelDisplay(restaurant.price)}
+                    </div>
+                </div>
+                <div class="card-promo">${restaurant.promo}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getPriceLevelDisplay(level) {
+    return '฿'.repeat(level) + '<span style="opacity: 0.3;">' + '฿'.repeat(3 - level) + '</span>';
+}
+
+// ===== CATEGORIES =====
+function loadCategories() {
+    const container = document.getElementById('categoriesGrid');
+    if (!container) return;
+    
+    const categories = [
+        { id: 'thai', name: 'อาหารไทย', icon: '🇹🇭', count: 24 },
+        { id: 'japanese', name: 'ญี่ปุ่น', icon: '🍣', count: 18 },
+        { id: 'korean', name: 'เกาหลี', icon: '🇰🇷', count: 15 },
+        { id: 'western', name: 'ฝรั่ง', icon: '🍔', count: 32 },
+        { id: 'chinese', name: 'จีน', icon: '🥟', count: 21 },
+        { id: 'dessert', name: 'ของหวาน', icon: '🍰', count: 12 },
+        { id: 'drinks', name: 'เครื่องดื่ม', icon: '🧋', count: 28 },
+        { id: 'fusion', name: 'ฟิวชั่น', icon: '🍽️', count: 9 }
+    ];
+    
+    container.innerHTML = categories.map(category => `
+        <div class="category-card" onclick="filterByCategory('${category.id}')">
+            <div class="category-icon">${category.icon}</div>
+            <div class="category-info">
+                <h3 class="category-name">${category.name}</h3>
+                <p class="category-count">${category.count} ร้าน</p>
+            </div>
+            <div class="category-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== FEATURED RESTAURANTS =====
+function loadFeaturedRestaurants() {
+    const container = document.getElementById('restaurantsMasonry');
+    if (!container) return;
+    
+    container.innerHTML = restaurants.map(restaurant => createRestaurantCard(restaurant)).join('');
+}
+
+function createRestaurantCard(restaurant) {
+    const isFavorite = favorites.includes(restaurant.id);
+    const isOpen = checkIfOpen(restaurant.openTime, restaurant.closeTime);
+    
+    return `
+        <div class="restaurant-card ${restaurant.isNew ? 'new' : ''}" onclick="openRestaurant(${restaurant.id})">
+            <div class="restaurant-image">
+                <img src="${restaurant.image}" alt="${restaurant.name}" loading="lazy">
+                <div class="restaurant-badges">
+                    <div class="badge ${restaurant.badge.toLowerCase()}">${restaurant.badge}</div>
+                    ${restaurant.isNew ? '<div class="badge new">ใหม่</div>' : ''}
+                </div>
+                <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
+                        onclick="event.stopPropagation(); toggleFavorite(${restaurant.id})">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <div class="restaurant-status ${isOpen ? 'open' : 'closed'}">
+                    <i class="fas fa-circle"></i>
+                    <span>${isOpen ? 'เปิด' : 'ปิด'}</span>
+                </div>
+            </div>
+            <div class="restaurant-content">
+                <div class="restaurant-header">
+                    <h3 class="restaurant-name">${restaurant.name}</h3>
                     <div class="restaurant-rating">
                         <i class="fas fa-star"></i>
                         <span>${restaurant.rating}</span>
                     </div>
-                    <div class="restaurant-delivery">${restaurant.deliveryTime}</div>
                 </div>
-                <div class="restaurant-promo">${restaurant.promo}</div>
+                <p class="restaurant-cuisine">${restaurant.cuisine}</p>
+                <div class="restaurant-specialties">
+                    ${restaurant.specialties.slice(0, 2).map(specialty => 
+                        `<span class="specialty-tag">${specialty}</span>`
+                    ).join('')}
+                </div>
+                <div class="restaurant-footer">
+                    <div class="delivery-info">
+                        <div class="delivery-time">
+                            <i class="fas fa-clock"></i>
+                            <span>${restaurant.deliveryTime}</span>
+                        </div>
+                        <div class="delivery-fee">
+                            <i class="fas fa-motorcycle"></i>
+                            <span>฿${restaurant.deliveryFee}</span>
+                        </div>
+                        <div class="distance">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${restaurant.distance} กม.</span>
+                        </div>
+                    </div>
+                    <div class="restaurant-promo">${restaurant.promo}</div>
+                </div>
             </div>
         </div>
     `;
 }
 
-function openRestaurant(restaurantId) {
-    const restaurant = restaurants.find(r => r.id === restaurantId);
-    if (!restaurant) return;
-    
-    showNotification(`เปิดร้าน ${restaurant.name}`, 'info');
+function checkIfOpen(openTime, closeTime) {
+    const now = new Date();
+    const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
+                       now.getMinutes().toString().padStart(2, '0');
+    return currentTime >= openTime && currentTime <= closeTime;
 }
 
+// ===== SPECIAL OFFERS =====
+function loadSpecialOffers() {
+    const container = document.getElementById('offersContainer');
+    if (!container) return;
+    
+    const specialOffers = [
+        {
+            id: 1,
+            title: "Flash Sale 50%",
+            subtitle: "เมนูพิเศษ ลดครึ่งราคา",
+            description: "สำหรับ 100 ออเดอร์แรกเท่านั้น",
+            image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=200&fit=crop",
+            discount: 50,
+            timeLeft: "02:30:45",
+            color: "danger"
+        },
+        {
+            id: 2,
+            title: "Free Delivery",
+            subtitle: "ฟรีค่าส่งทุกออเดอร์",
+            description: "เมื่อสั่งครับ ฿200 ขึ้นไป",
+            image: "https://images.unsplash.com/photo-1526367790999-0150786686a2?w=400&h=200&fit=crop",
+            discount: 0,
+            timeLeft: null,
+            color: "success"
+        }
+    ];
+    
+    container.innerHTML = specialOffers.map(offer => `
+        <div class="offer-card ${offer.color}" onclick="applyOffer(${offer.id})">
+            <div class="offer-image">
+                <img src="${offer.image}" alt="${offer.title}" loading="lazy">
+                <div class="offer-discount">
+                    ${offer.discount > 0 ? `${offer.discount}% OFF` : 'FREE'}
+                </div>
+            </div>
+            <div class="offer-content">
+                <h3 class="offer-title">${offer.title}</h3>
+                <p class="offer-subtitle">${offer.subtitle}</p>
+                <p class="offer-description">${offer.description}</p>
+                ${offer.timeLeft ? `
+                    <div class="offer-timer">
+                        <i class="fas fa-clock"></i>
+                        <span class="countdown" data-time="${offer.timeLeft}">เหลือ ${offer.timeLeft}</span>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `).join('');
+    
+    // Start countdown timers
+    startCountdownTimers();
+}
+
+function startCountdownTimers() {
+    const countdowns = document.querySelectorAll('.countdown[data-time]');
+    countdowns.forEach(countdown => {
+        const timeString = countdown.getAttribute('data-time');
+        if (timeString) {
+            startTimer(countdown, timeString);
+        }
+    });
+}
+
+function startTimer(element, timeString) {
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    
+    const timer = setInterval(() => {
+        if (totalSeconds <= 0) {
+            clearInterval(timer);
+            element.textContent = 'หมดเวลาแล้ว';
+            return;
+        }
+        
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+        
+        element.textContent = `เหลือ ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        totalSeconds--;
+    }, 1000);
+}
+
+// ===== EVENT LISTENERS =====
+function setupEventListeners() {
+    // Smart search input
+    const smartSearchInput = document.getElementById('smartSearchInput');
+    if (smartSearchInput) {
+        smartSearchInput.addEventListener('input', handleSmartSearch);
+    }
+    
+    // Sort filter
+    const sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) {
+        sortFilter.addEventListener('change', handleSortChange);
+    }
+}
+
+function handleSmartSearch(event) {
+    const query = event.target.value.trim();
+    
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        if (query.length >= 2) {
+            performSmartSearch(query);
+        }
+    }, 300);
+}
+
+function performSmartSearch(query) {
+    const results = restaurants.filter(restaurant => 
+        restaurant.name.toLowerCase().includes(query.toLowerCase()) ||
+        restaurant.cuisine.toLowerCase().includes(query.toLowerCase()) ||
+        restaurant.specialties.some(specialty => 
+            specialty.toLowerCase().includes(query.toLowerCase())
+        )
+    );
+    
+    const container = document.getElementById('restaurantsMasonry');
+    if (container) {
+        container.innerHTML = results.map(restaurant => createRestaurantCard(restaurant)).join('');
+    }
+    
+    showToast(`พบ ${results.length} ร้านที่ตรงกับ "${query}"`, 'info');
+}
+
+// ===== FAVORITES SYSTEM =====
 function toggleFavorite(restaurantId) {
     const index = favorites.indexOf(restaurantId);
     
     if (index > -1) {
         favorites.splice(index, 1);
-        showNotification('ลบออกจากรายการโปรดแล้ว', 'info');
+        showToast('ลบออกจากรายการโปรดแล้ว', 'info');
     } else {
         favorites.push(restaurantId);
-        showNotification('เพิ่มในรายการโปรดแล้ว', 'success');
+        showToast('เพิ่มในรายการโปรดแล้ว', 'success');
     }
     
-    localStorage.setItem('grabfood_favorites', JSON.stringify(favorites));
-    loadRestaurants();
-    loadFavorites();
+    localStorage.setItem('foodflow_favorites', JSON.stringify(favorites));
+    updateFavoritesCount();
+    loadFeaturedRestaurants();
+    loadRecommendations();
 }
 
-// ===== NAVIGATION FUNCTIONS =====
-function navigateToHome() {
-    showSection('homeSection');
-    updateBottomNav('home');
-}
-
-function navigateToSearch() {
-    showSection('searchSection');
-    updateBottomNav('search');
-    document.getElementById('searchInput').focus();
-}
-
-function navigateToFavorites() {
-    showSection('favoritesSection');
-    updateBottomNav('favorites');
-    loadFavorites();
-}
-
-function navigateToOrders() {
-    showSection('ordersSection');
-    updateBottomNav('orders');
-}
-
-function navigateToProfile() {
-    showSection('profileSection');
-    updateBottomNav('profile');
-}
-
-function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(section => {
-        section.classList.add('hidden');
-    });
-    
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.classList.remove('hidden');
-    }
-    
-    currentSection = sectionId.replace('Section', '');
-}
-
-function updateBottomNav(activeItem) {
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    const navItems = document.querySelectorAll('.nav-item');
-    const itemMap = {
-        'home': 0,
-        'search': 1,
-        'favorites': 2,
-        'orders': 3,
-        'cart': 4
-    };
-    
-    if (navItems[itemMap[activeItem]]) {
-        navItems[itemMap[activeItem]].classList.add('active');
+function updateFavoritesCount() {
+    const favoritesCount = document.getElementById('favoritesCount');
+    if (favoritesCount) {
+        if (favorites.length > 0) {
+            favoritesCount.textContent = favorites.length;
+            favoritesCount.style.display = 'flex';
+        } else {
+            favoritesCount.style.display = 'none';
+        }
     }
 }
 
-// ===== SEARCH FUNCTIONS =====
-function performSearch(query) {
-    if (!query.trim()) {
-        document.getElementById('searchResults').innerHTML = '';
+// ===== CART SYSTEM =====
+function updateCartUI() {
+    const floatingCart = document.getElementById('floatingCart');
+    const cartCount = document.getElementById('cartCount');
+    const cartItemsText = document.getElementById('cartItemsText');
+    const cartTotalPreview = document.getElementById('cartTotalPreview');
+    
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    if (totalItems > 0) {
+        if (floatingCart) {
+            floatingCart.style.display = 'block';
+        }
+        if (cartCount) cartCount.textContent = totalItems;
+        if (cartItemsText) cartItemsText.textContent = `${totalItems} รายการ`;
+        if (cartTotalPreview) cartTotalPreview.textContent = `฿${totalPrice.toLocaleString()}`;
+    } else {
+        if (floatingCart) floatingCart.style.display = 'none';
+    }
+}
+
+function openCartModal() {
+    const modal = document.getElementById('cartModalOverlay');
+    if (modal) {
+        modal.classList.add('show');
+        loadCartItems();
+    }
+}
+
+function closeCartModal() {
+    const modal = document.getElementById('cartModalOverlay');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+function loadCartItems() {
+    const container = document.getElementById('cartItemsList');
+    
+    if (!container) return;
+    
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>ตะกร้าว่างเปล่า</h3>
+                <p>เลือกเมนูอร่อยใส่ตะกร้า</p>
+            </div>
+        `;
         return;
     }
     
-    const results = restaurants.filter(restaurant => 
-        restaurant.name.toLowerCase().includes(query.toLowerCase()) ||
-        restaurant.cuisine.toLowerCase().includes(query.toLowerCase())
-    );
-    
-    const searchResults = document.getElementById('searchResults');
-    if (results.length > 0) {
-        searchResults.innerHTML = results.map(restaurant => createRestaurantCard(restaurant)).join('');
-    } else {
-        searchResults.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-search"></i>
-                <h3>ไม่พบผลการค้นหา</h3>
-                <p>ลองค้นหาด้วยคำอื่น</p>
+    container.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <div class="cart-item-image">
+                <img src="${item.image}" alt="${item.itemName}">
             </div>
-        `;
-    }
+            <div class="cart-item-details">
+                <h4 class="cart-item-name">${item.itemName}</h4>
+                <p class="cart-item-restaurant">${item.restaurantName}</p>
+                <div class="cart-item-price">฿${(item.price * item.quantity).toLocaleString()}</div>
+            </div>
+            <div class="cart-item-controls">
+                <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, -1)">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <span class="quantity-display">${item.quantity}</span>
+                <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, 1)">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
 }
 
-// ===== CATEGORY FUNCTIONS =====
+// ===== ACTION HANDLERS =====
+function quickOrder() {
+    showToast('กำลังโหลดออเดอร์ล่าสุด...', 'info');
+}
+
+function exploreNearby() {
+    showToast('ค้นหาร้านใกล้เคียง...', 'info');
+}
+
+function dailyDeals() {
+    navigateToSection('offers');
+    showToast('แสดงโปรโมชั่นวันนี้', 'success');
+}
+
+function premiumChef() {
+    showToast('แสดงเมนูพิเศษจากเชฟ', 'info');
+}
+
+function refreshRecommendations() {
+    showToast('รีเฟรชข้อมูลแล้ว', 'success');
+    loadRecommendations();
+}
+
 function filterByCategory(category) {
-    const filtered = restaurants.filter(restaurant => restaurant.category === category);
-    const grid = document.getElementById('restaurantGrid');
+    const filtered = restaurants.filter(r => r.category === category);
+    const container = document.getElementById('restaurantsMasonry');
     
-    if (filtered.length > 0) {
-        grid.innerHTML = filtered.map(restaurant => createRestaurantCard(restaurant)).join('');
-    } else {
-        grid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-utensils"></i>
-                <h3>ไม่พบร้านอาหาร</h3>
-                <p>ในหมวดหมู่นี้</p>
-            </div>
-        `;
+    if (container) {
+        container.innerHTML = filtered.map(restaurant => createRestaurantCard(restaurant)).join('');
     }
     
-    showNotification(`แสดงร้านอาหารหมวด ${getCategoryName(category)}`, 'info');
+    showToast(`แสดงร้าน${getCategoryName(category)}`, 'info');
 }
 
 function getCategoryName(category) {
@@ -341,220 +624,125 @@ function getCategoryName(category) {
         'korean': 'อาหารเกาหลี',
         'western': 'อาหารฝรั่ง',
         'chinese': 'อาหารจีน',
+        'fusion': 'ฟิวชั่น',
         'dessert': 'ของหวาน',
         'drinks': 'เครื่องดื่ม'
     };
     return categoryNames[category] || category;
 }
 
-function showAllCategories() {
-    loadRestaurants();
-    showNotification('แสดงร้านอาหารทั้งหมด', 'info');
-}
-
-function showAllRestaurants() {
-    loadRestaurants();
-    showNotification('แสดงร้านอาหารทั้งหมด', 'info');
-}
-
-// ===== FAVORITES FUNCTIONS =====
-function loadFavorites() {
-    const favoritesGrid = document.getElementById('favoritesGrid');
-    if (!favoritesGrid) return;
-    
-    const favoriteRestaurants = restaurants.filter(restaurant => 
-        favorites.includes(restaurant.id)
-    );
-    
-    if (favoriteRestaurants.length > 0) {
-        favoritesGrid.innerHTML = favoriteRestaurants.map(restaurant => 
-            createRestaurantCard(restaurant)
-        ).join('');
-    } else {
-        favoritesGrid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-heart"></i>
-                <h3>ยังไม่มีรายการโปรด</h3>
-                <p>เพิ่มร้านอาหารที่ชอบ</p>
-            </div>
-        `;
+function openRestaurant(restaurantId) {
+    const restaurant = restaurants.find(r => r.id === restaurantId);
+    if (restaurant) {
+        showToast(`เปิดร้าน ${restaurant.name}`, 'info');
     }
 }
 
-function showProfileFavorites() {
-    navigateToFavorites();
+function applyOffer(offerId) {
+    showToast(`ใช้โปรโมชั่นสำเร็จ!`, 'success');
 }
 
-// ===== CART FUNCTIONS =====
-function toggleCart() {
-    const cartSidebar = document.getElementById('cartSidebar');
-    const overlay = document.getElementById('overlay');
-    
-    if (cartSidebar.classList.contains('open')) {
-        cartSidebar.classList.remove('open');
-        overlay.classList.remove('show');
+function startVoiceSearch() {
+    if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'th-TH';
+        recognition.start();
+        
+        showToast('กำลังฟัง... พูดได้เลย', 'info');
+        
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            const searchInput = document.getElementById('smartSearchInput');
+            if (searchInput) {
+                searchInput.value = transcript;
+                performSmartSearch(transcript);
+            }
+            showToast(`ค้นหา: ${transcript}`, 'success');
+        };
+        
+        recognition.onerror = function() {
+            showToast('ไม่สามารถรับเสียงได้ ลองอีกครั้ง', 'error');
+        };
     } else {
-        cartSidebar.classList.add('open');
-        overlay.classList.add('show');
-    }
-}
-
-function updateCartBadge() {
-    const badge = document.getElementById('cartBadge');
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
-    if (totalItems > 0) {
-        badge.textContent = totalItems;
-        badge.style.display = 'flex';
-    } else {
-        badge.style.display = 'none';
+        showToast('เบราว์เซอร์ไม่รองรับการค้นหาด้วยเสียง', 'warning');
     }
 }
 
 function proceedToCheckout() {
-    if (cart.length === 0) return;
-    
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    showNotification(`ดำเนินการสั่งซื้อ ยอดรวม ฿${total}`, 'success');
-    
+    showToast(`ดำเนินการสั่งซื้อสำเร็จ!`, 'success');
     cart = [];
-    updateCartBadge();
-    toggleCart();
+    localStorage.setItem('foodflow_cart', JSON.stringify(cart));
+    updateCartUI();
+    closeCartModal();
 }
 
-// ===== QUICK ACTIONS =====
-function navigateToFood() {
-    navigateToHome();
-    showNotification('แสดงร้านอาหารทั้งหมด', 'info');
-}
-
-function navigateToMart() {
-    showNotification('GrabMart กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
-}
-
-function navigateToExpress() {
-    showNotification('GrabExpress กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
-}
-
-function navigateToPay() {
-    showNotification('GrabPay กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
-}
-
-// ===== PROMOTION FUNCTIONS =====
-function applyPromotion() {
-    showNotification('🎉 ใช้โปรโมชั่นฟรีค่าส่งสำเร็จ!', 'success');
-}
-
-// ===== ADDRESS FUNCTIONS =====
-function showAddressModal() {
-    const modal = document.getElementById('addressModal');
-    const overlay = document.getElementById('overlay');
+function navigateToSection(section) {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
     
-    modal.style.display = 'flex';
-    overlay.classList.add('show');
-}
-
-function closeAddressModal() {
-    const modal = document.getElementById('addressModal');
-    const overlay = document.getElementById('overlay');
+    const activeNavItem = document.querySelector(`[data-section="${section}"]`);
+    if (activeNavItem) {
+        activeNavItem.classList.add('active');
+    }
     
-    modal.style.display = 'none';
-    overlay.classList.remove('show');
+    const targetSection = document.getElementById(`${section}Section`);
+    if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
-function addNewAddress() {
-    showNotification('เพิ่มที่อยู่ใหม่ กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
+function openSearchModal() {
+    const modal = document.getElementById('searchModalOverlay');
+    if (modal) {
+        modal.classList.add('show');
+    }
 }
 
-// ===== PROFILE FUNCTIONS =====
-function showOrderHistory() {
-    navigateToOrders();
-}
-
-function showAddresses() {
-    showAddressModal();
-}
-
-function showPaymentMethods() {
-    showNotification('วิธีการชำระเงิน กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
-}
-
-function showRewards() {
-    showNotification('🎁 คุณมี 850 คะแนน! ระบบรางวัลกำลังจะเปิดให้บริการเร็วๆ นี้!', 'success');
-}
-
-function showPromotions() {
-    showNotification('โปรโมชั่นพิเศษ กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
-}
-
-function showSettings() {
-    showNotification('การตั้งค่า กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
-}
-
-function showHelp() {
-    showNotification('ช่วยเหลือและสนับสนุน กำลังจะเปิดให้บริการเร็วๆ นี้!', 'info');
+function closeSearchModal() {
+    const modal = document.getElementById('searchModalOverlay');
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }
 
 function showNotifications() {
-    showNotification('🔔 คุณมีการแจ้งเตือน 3 รายการ', 'info');
+    showToast('🔔 คุณมีการแจ้งเตือน 3 รายการ', 'info');
 }
 
-// ===== OVERLAY FUNCTIONS =====
-function closeOverlay() {
-    const overlay = document.getElementById('overlay');
-    const cartSidebar = document.getElementById('cartSidebar');
-    const addressModal = document.getElementById('addressModal');
-    
-    overlay.classList.remove('show');
-    cartSidebar.classList.remove('open');
-    addressModal.style.display = 'none';
+function showLocationPicker() {
+    showToast('เลือกที่อยู่สำหรับจัดส่ง', 'info');
 }
 
 // ===== NOTIFICATION SYSTEM =====
-function showNotification(message, type = 'info') {
-    const container = document.getElementById('notificationContainer') || createNotificationContainer();
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
     
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
     
-    const icon = getNotificationIcon(type);
-    notification.innerHTML = `
+    const icon = getToastIcon(type);
+    toast.innerHTML = `
         <i class="${icon}"></i>
         <span>${message}</span>
     `;
     
-    container.appendChild(notification);
+    container.appendChild(toast);
     
-    setTimeout(() => notification.classList.add('show'), 100);
+    setTimeout(() => toast.classList.add('show'), 100);
     
     setTimeout(() => {
-        notification.classList.remove('show');
+        toast.classList.remove('show');
         setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
             }
         }, 300);
     }, 3000);
 }
 
-function createNotificationContainer() {
-    const container = document.createElement('div');
-    container.id = 'notificationContainer';
-    container.className = 'notification-container';
-    container.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    `;
-    document.body.appendChild(container);
-    return container;
-}
-
-function getNotificationIcon(type) {
+function getToastIcon(type) {
     const icons = {
         'success': 'fas fa-check-circle',
         'error': 'fas fa-exclamation-circle',
@@ -564,120 +752,69 @@ function getNotificationIcon(type) {
     return icons[type] || icons.info;
 }
 
+// ===== UTILITY FUNCTIONS =====
+function handleSortChange(event) {
+    const sortBy = event.target.value;
+    const container = document.getElementById('restaurantsMasonry');
+    
+    let sortedRestaurants = [...restaurants];
+    
+    switch (sortBy) {
+        case 'rating':
+            sortedRestaurants.sort((a, b) => b.rating - a.rating);
+            break;
+        case 'delivery':
+            sortedRestaurants.sort((a, b) => parseInt(a.deliveryTime) - parseInt(b.deliveryTime));
+            break;
+        case 'price':
+            sortedRestaurants.sort((a, b) => a.price - b.price);
+            break;
+        case 'distance':
+            sortedRestaurants.sort((a, b) => a.distance - b.distance);
+            break;
+    }
+    
+    if (container) {
+        container.innerHTML = sortedRestaurants.map(restaurant => createRestaurantCard(restaurant)).join('');
+    }
+    
+    showToast(`เรียงตาม${getSortLabel(sortBy)}`, 'info');
+}
+
+function getSortLabel(sortBy) {
+    const labels = {
+        'rating': 'เรตติ้งสูงสุด',
+        'delivery': 'ส่งเร็วที่สุด',
+        'price': 'ราคาถูกสุด',
+        'distance': 'ใกล้ที่สุด'
+    };
+    return labels[sortBy] || sortBy;
+}
+
 // ===== EVENT LISTENERS =====
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeOverlay();
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('show');
     }
 });
 
-// Search input listener
-setTimeout(() => {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                performSearch(e.target.value);
-            }, 300);
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.show').forEach(modal => {
+            modal.classList.remove('show');
         });
     }
-}, 1000);
+});
 
-// Add notification styles
-const notificationStyles = `
-    .notification-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .notification {
-        background: white;
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 300px;
-        transform: translateX(100%);
-        opacity: 0;
-        transition: all 0.3s ease;
-        border-left: 4px solid var(--grab-green);
-    }
-    
-    .notification.show {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    
-    .notification.success {
-        border-left-color: var(--grab-green);
-        color: var(--grab-green);
-    }
-    
-    .notification.error {
-        border-left-color: var(--grab-red);
-        color: var(--grab-red);
-    }
-    
-    .notification.warning {
-        border-left-color: var(--grab-orange);
-        color: var(--grab-orange);
-    }
-    
-    .notification.info {
-        border-left-color: #2196F3;
-        color: #2196F3;
-    }
-    
-    .notification i {
-        font-size: 1.2rem;
-    }
-    
-    .notification span {
-        flex: 1;
-        font-weight: 500;
-        color: var(--text-primary);
-    }
-    
-    .empty-state {
-        text-align: center;
-        padding: 48px 24px;
-        color: #999;
-        grid-column: 1 / -1;
-    }
-    
-    .empty-state i {
-        font-size: 4rem;
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
-    
-    .empty-state h3 {
-        font-size: 1.2rem;
-        margin-bottom: 8px;
-        color: var(--text-primary);
-    }
-    
-    @media (max-width: 480px) {
-        .notification-container {
-            top: 10px;
-            right: 10px;
-            left: 10px;
-        }
-        
-        .notification {
-            min-width: auto;
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('.floating-header');
+    if (header) {
+        if (window.scrollY > 100) {
+            header.style.transform = 'scale(0.95)';
+            header.style.opacity = '0.95';
+        } else {
+            header.style.transform = 'scale(1)';
+            header.style.opacity = '1';
         }
     }
-`;
-
-const styleSheet = document.createElement('style');
-styleSheet.textContent = notificationStyles;
-document.head.appendChild(styleSheet); 
+}); 
