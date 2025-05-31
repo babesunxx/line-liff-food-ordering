@@ -3,25 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodFlow - Premium Food Delivery</title>
+    <title>FoodOrder - สั่งอาหารออนไลน์</title>
     
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#6366f1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="FoodFlow">
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Experience premium food delivery with FoodFlow - Modern, Fast, Delicious">
-    <meta name="keywords" content="food delivery, premium dining, modern interface, fast delivery">
+    <!-- Meta Tags -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="สั่งอาหารออนไลน์ง่ายๆ ส่งถึงบ้าน">
     
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
@@ -30,393 +22,138 @@
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="animated-bg">
-        <div class="floating-shapes">
-            <div class="shape circle"></div>
-            <div class="shape triangle"></div>
-            <div class="shape square"></div>
-            <div class="shape hexagon"></div>
-        </div>
-    </div>
-
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loader-container">
-            <div class="food-loader">
-                <div class="plate">
-                    <div class="food-item burger"></div>
-                    <div class="food-item pizza"></div>
-                    <div class="food-item sushi"></div>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                    <span>FoodOrder</span>
                 </div>
-            </div>
-            <h2 class="loading-text">FoodFlow</h2>
-            <p class="loading-subtitle">เตรียมประสบการณ์อาหารพิเศษ</p>
-            <div class="loading-progress">
-                <div class="progress-bar"></div>
+                <div class="user-info">
+                    <span id="userName">สวัสดี!</span>
+                    <img id="userAvatar" src="https://via.placeholder.com/40" alt="User" class="avatar">
+                </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- App Container -->
-    <div id="app" class="app-container">
-        <!-- Floating Header -->
-        <header class="floating-header">
-            <div class="header-glass">
-                <div class="header-content">
-                    <div class="location-info">
-                        <div class="location-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="location-details">
-                            <span class="location-label">จัดส่งถึง</span>
-                            <div class="location-text" onclick="showLocationPicker()">
-                                <span id="currentLocation">บ้าน - ถนนสุขุมวิท</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="header-actions">
-                        <button class="action-btn notification-btn" onclick="showNotifications()">
-                            <i class="fas fa-bell"></i>
-                            <div class="notification-dot"></div>
-                        </button>
-                        <div class="profile-container" onclick="navigateToProfile()">
-                            <div class="profile-avatar">
-                                <img id="userAvatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="Profile">
-                                <div class="online-indicator"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Smart Search -->
-                <div class="smart-search">
-                    <div class="search-input-container">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="smartSearchInput" placeholder="ค้นหาร้าน, เมนู, หรือบอกเราว่าคุณอยากกินอะไร..." autocomplete="off">
-                        <button class="voice-search-btn" onclick="startVoiceSearch()">
-                            <i class="fas fa-microphone"></i>
-                        </button>
-                    </div>
-                    <div class="search-suggestions" id="searchSuggestions"></div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Hero Section -->
-            <section class="hero-section" id="heroSection">
-                <div class="hero-content">
-                    <div class="welcome-card">
-                        <div class="welcome-text">
-                            <h1 class="hero-title">สวัสดี <span id="userName">Nathan</span>! 👋</h1>
-                            <p class="hero-subtitle">อยากกินอะไรดีวันนี้?</p>
-                        </div>
-                        <div class="weather-widget">
-                            <div class="weather-info">
-                                <i class="fas fa-sun weather-icon"></i>
-                                <span class="temperature">32°C</span>
-                            </div>
-                            <span class="weather-text">สดใส</span>
-                        </div>
-                    </div>
-
-                    <!-- Quick Actions Carousel -->
-                    <div class="quick-actions-carousel">
-                        <div class="carousel-container">
-                            <div class="action-card primary" onclick="quickOrder()">
-                                <div class="action-icon">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h3>Quick Order</h3>
-                                    <p>สั่งซ้ำออเดอร์ล่าสุด</p>
-                                </div>
-                            </div>
-                            
-                            <div class="action-card secondary" onclick="exploreNearby()">
-                                <div class="action-icon">
-                                    <i class="fas fa-compass"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h3>Explore</h3>
-                                    <p>ร้านใกล้เคียง</p>
-                                </div>
-                            </div>
-                            
-                            <div class="action-card accent" onclick="dailyDeals()">
-                                <div class="action-icon">
-                                    <i class="fas fa-fire"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h3>Hot Deals</h3>
-                                    <p>โปรโมชั่นร้อนๆ</p>
-                                </div>
-                            </div>
-                            
-                            <div class="action-card special" onclick="premiumChef()">
-                                <div class="action-icon">
-                                    <i class="fas fa-crown"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h3>Chef's Special</h3>
-                                    <p>เมนูพิเศษจากเชฟ</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Smart Recommendations -->
-                    <div class="smart-recommendations">
-                        <div class="section-header">
-                            <div class="section-title">
-                                <i class="fas fa-magic"></i>
-                                <h2>แนะนำสำหรับคุณ</h2>
-                            </div>
-                            <button class="refresh-btn" onclick="refreshRecommendations()">
-                                <i class="fas fa-refresh"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="recommendation-cards" id="recommendationCards">
-                            <!-- Populated by JavaScript -->
-                        </div>
-                    </div>
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="ค้นหาร้านอาหาร หรือเมนู...">
                 </div>
             </section>
 
-            <!-- Categories Section -->
-            <section class="categories-section" id="categoriesSection">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-th-large"></i>
-                        หมวดหมู่อาหาร
-                    </h2>
-                    <div class="view-toggle">
-                        <button class="toggle-btn active" data-view="grid">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button class="toggle-btn" data-view="list">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                </div>
-                
+            <!-- Categories -->
+            <section class="categories-section">
+                <h2>หมวดหมู่อาหาร</h2>
                 <div class="categories-grid" id="categoriesGrid">
-                    <!-- Populated by JavaScript -->
+                    <!-- Categories will be loaded here -->
                 </div>
             </section>
 
-            <!-- Featured Restaurants -->
-            <section class="featured-section" id="featuredSection">
+            <!-- Restaurants -->
+            <section class="restaurants-section">
                 <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-star"></i>
-                        ร้านอาหารแนะนำ
-                    </h2>
-                    <div class="filter-controls">
-                        <select class="filter-select" id="sortFilter">
-                            <option value="rating">⭐ เรตติ้งสูงสุด</option>
-                            <option value="delivery">🚚 ส่งเร็วที่สุด</option>
-                            <option value="price">💰 ราคาถูกสุด</option>
-                            <option value="distance">📍 ใกล้ที่สุด</option>
-                        </select>
-                    </div>
+                    <h2>ร้านอาหารแนะนำ</h2>
+                    <select id="sortSelect" class="sort-select">
+                        <option value="rating">เรตติ้งสูงสุด</option>
+                        <option value="delivery">ส่งเร็วที่สุด</option>
+                        <option value="distance">ใกล้ที่สุด</option>
+                    </select>
                 </div>
-                
-                <div class="restaurants-masonry" id="restaurantsMasonry">
-                    <!-- Populated by JavaScript -->
+                <div class="restaurants-grid" id="restaurantsGrid">
+                    <!-- Restaurants will be loaded here -->
                 </div>
             </section>
-
-            <!-- Special Offers -->
-            <section class="offers-section" id="offersSection">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-gift"></i>
-                        ข้อเสนอพิเศษ
-                    </h2>
-                </div>
-                
-                <div class="offers-carousel">
-                    <div class="offers-container" id="offersContainer">
-                        <!-- Populated by JavaScript -->
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Floating Cart -->
-        <div class="floating-cart" id="floatingCart" style="display: none;">
-            <div class="cart-preview">
-                <div class="cart-info">
-                    <div class="cart-icon">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span class="cart-count" id="cartCount">0</span>
-                    </div>
-                    <div class="cart-details">
-                        <span class="cart-items-text" id="cartItemsText">ไม่มีสินค้า</span>
-                        <span class="cart-total" id="cartTotalPreview">฿0</span>
-                    </div>
-                </div>
-                <button class="view-cart-btn" onclick="openCartModal()">
-                    <span>ดูตะกร้า</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
         </div>
+    </main>
 
-        <!-- Bottom Navigation -->
-        <nav class="bottom-navigation">
-            <div class="nav-background"></div>
-            <div class="nav-items">
-                <div class="nav-item active" data-section="hero" onclick="navigateToSection('hero')">
-                    <div class="nav-icon">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <span class="nav-label">หน้าหลัก</span>
-                </div>
-                
-                <div class="nav-item" data-section="categories" onclick="navigateToSection('categories')">
-                    <div class="nav-icon">
-                        <i class="fas fa-th-large"></i>
-                    </div>
-                    <span class="nav-label">หมวดหมู่</span>
-                </div>
-                
-                <div class="nav-item" data-section="search" onclick="openSearchModal()">
-                    <div class="nav-icon">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <span class="nav-label">ค้นหา</span>
-                </div>
-                
-                <div class="nav-item" data-section="favorites" onclick="navigateToSection('favorites')">
-                    <div class="nav-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <span class="nav-label">โปรด</span>
-                    <div class="favorites-count" id="favoritesCount" style="display: none;">0</div>
-                </div>
-                
-                <div class="nav-item" data-section="profile" onclick="navigateToSection('profile')">
-                    <div class="nav-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <span class="nav-label">โปรไฟล์</span>
-                </div>
-            </div>
-        </nav>
+    <!-- Cart Button -->
+    <div class="cart-button" id="cartButton" onclick="openCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+        <div class="cart-total" id="cartTotal">฿0</div>
     </div>
 
     <!-- Cart Modal -->
-    <div class="modal-overlay" id="cartModalOverlay">
-        <div class="cart-modal" id="cartModal">
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">
-                    <i class="fas fa-shopping-bag"></i>
-                    ตะกร้าสินค้า
-                </h3>
-                <button class="close-modal-btn" onclick="closeCartModal()">
+                <h3>ตะกร้าสินค้า</h3>
+                <button class="close-btn" onclick="closeCart()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <div class="modal-content">
-                <div class="cart-items-list" id="cartItemsList">
-                    <!-- Populated by JavaScript -->
+            <div class="modal-body">
+                <div id="cartItems">
+                    <!-- Cart items will be loaded here -->
                 </div>
-                
                 <div class="cart-summary">
                     <div class="summary-row">
-                        <span>ยอดรวมสินค้า</span>
+                        <span>ยอดรวม</span>
                         <span id="subtotal">฿0</span>
                     </div>
                     <div class="summary-row">
                         <span>ค่าจัดส่ง</span>
-                        <span id="deliveryFee">฿25</span>
+                        <span>฿30</span>
                     </div>
-                    <div class="summary-row discount" id="discountRow" style="display: none;">
-                        <span>ส่วนลด</span>
-                        <span id="discountAmount">-฿0</span>
-                    </div>
-                    <div class="summary-divider"></div>
                     <div class="summary-row total">
-                        <span>ยอดรวมทั้งหมด</span>
-                        <span id="finalTotal">฿0</span>
+                        <span>รวมทั้งหมด</span>
+                        <span id="finalTotal">฿30</span>
                     </div>
                 </div>
             </div>
-            
             <div class="modal-footer">
-                <button class="checkout-btn" id="checkoutBtn" onclick="proceedToCheckout()">
-                    <i class="fas fa-credit-card"></i>
-                    <span>ดำเนินการสั่งซื้อ</span>
+                <button class="order-btn" onclick="placeOrder()">
+                    <i class="fas fa-check"></i>
+                    สั่งซื้อ
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Search Modal -->
-    <div class="modal-overlay" id="searchModalOverlay">
-        <div class="search-modal" id="searchModal">
+    <!-- Restaurant Modal -->
+    <div class="modal-overlay" id="restaurantModal">
+        <div class="modal">
             <div class="modal-header">
-                <div class="search-header">
-                    <div class="advanced-search">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="advancedSearchInput" placeholder="ค้นหาร้าน, เมนู, ส่วนผสม...">
-                        <button class="filter-btn" onclick="openFilterModal()">
-                            <i class="fas fa-filter"></i>
-                        </button>
-                    </div>
-                </div>
-                <button class="close-modal-btn" onclick="closeSearchModal()">
+                <h3 id="restaurantName">ร้านอาหาร</h3>
+                <button class="close-btn" onclick="closeRestaurant()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <div class="modal-content">
-                <div class="search-categories">
-                    <div class="category-pills" id="searchCategoryPills">
-                        <!-- Populated by JavaScript -->
+            <div class="modal-body">
+                <div class="restaurant-info">
+                    <img id="restaurantImage" src="" alt="Restaurant">
+                    <div class="restaurant-details">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span id="restaurantRating">0</span>
+                        </div>
+                        <div class="delivery-time">
+                            <i class="fas fa-clock"></i>
+                            <span id="restaurantDelivery">0 นาที</span>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="search-results" id="searchResults">
-                    <div class="recent-searches">
-                        <h4>ค้นหาล่าสุด</h4>
-                        <div class="recent-items" id="recentSearches">
-                            <!-- Populated by JavaScript -->
-                        </div>
+                <div class="menu-section">
+                    <h4>เมนูอาหาร</h4>
+                    <div id="menuItems">
+                        <!-- Menu items will be loaded here -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Notification Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- PWA Install Prompt -->
-    <div class="pwa-install-prompt" id="pwaInstallPrompt" style="display: none;">
-        <div class="prompt-content">
-            <div class="prompt-icon">
-                <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div class="prompt-text">
-                <h4>ติดตั้ง FoodFlow</h4>
-                <p>เพื่อประสบการณ์ที่ดีที่สุด</p>
-            </div>
-            <button class="install-btn" onclick="installPWA()">
-                ติดตั้ง
-            </button>
-            <button class="dismiss-btn" onclick="dismissPWA()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
     </div>
 
     <!-- Scripts -->
