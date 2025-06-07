@@ -1,35 +1,22 @@
 {
-  "name": "line-liff-food-ordering",
+  "name": "express-ejs-tailwind",
   "version": "1.0.0",
-  "description": "ระบบสั่งอาหารผ่าน LINE LIFF - Food ordering system via LINE LIFF",
-  "main": "index.html",
+  "description": "Full Stack project with Express, EJS and TailwindCSS",
+  "main": "app.js",
   "scripts": {
-    "start": "npx http-server -p 8080 -c-1",
-    "dev": "npx live-server --port=8080",
-    "build": "echo 'No build process needed for static files'",
-    "deploy": "echo 'Deploy to your hosting service'"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
-  "keywords": [
-    "line",
-    "liff",
-    "food-ordering",
-    "thailand",
-    "restaurant",
-    "mobile-app"
-  ],
-  "author": "LINE LIFF Developer",
-  "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.3",
+    "moment-timezone": "^0.5.48",
+    "sqlite3": "^5.1.6"
+  },
   "devDependencies": {
-    "http-server": "^14.1.1",
-    "live-server": "^1.2.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/line-liff-food-ordering.git"
-  },
-  "bugs": {
-    "url": "https://github.com/yourusername/line-liff-food-ordering/issues"
-  },
-  "homepage": "https://github.com/yourusername/line-liff-food-ordering#readme"
-} 
+    "nodemon": "^3.0.1"
+  }
+}
